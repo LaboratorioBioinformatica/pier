@@ -10,12 +10,15 @@ public class App {
 	public static void main(String[] args) {
 		
 		if(args.length > 0){
-			String app = args[0];
+			Integer app = new Integer(args[0]);
 			
 			switch (app) {
-			case "mytaxa":
+			case 1:
 				MytaxaConverterFile.main(args);
 				break;
+			case 2:
+				MappingReader mappingReader = new MappingReader(args[1], args[2]);
+				break;	
 
 			default:
 				System.out.println("app: " +  app + " not found!");

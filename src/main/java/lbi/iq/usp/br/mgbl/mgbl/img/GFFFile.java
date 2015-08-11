@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 public class GFFFile {
 	
+	private static final String GENE_ID_ATTRIBUTE_NAME = "locus_tag";
+
 	private static final String BREAK_LINE = "\\n";
 	
 	private List<GFFFeature> featuresList;
@@ -23,10 +25,13 @@ public class GFFFile {
 		philoDistMap = loadPhiloDistFromFile(philoDistFilePath);
 		geneProductMap = loadGeneProductFromFile(geneProductFilePath);
 		
+	}
+	
+	public void methodNameTobeDefine(){
 		for (GFFFeature feature : featuresList) {
 			
 			if(feature.getSeqId().equals("metazooDRAFT_1192597")){
-				String geneId = feature.getAttributeByName("locus_tag");
+				String geneId = feature.getAttributeByName(GENE_ID_ATTRIBUTE_NAME);
 				if(geneId != null ){
 					PhiloDist philoDist = philoDistMap.get(geneId);
 					GeneProduct geneProduct = geneProductMap.get(geneId);
@@ -49,6 +54,31 @@ public class GFFFile {
 	
 	public Integer size(){
 		return featuresList.size();
+	}
+	
+	public List<GFFFeature> getFeture(String sequenceReference){
+		List<GFFFeature> features = new ArrayList<GFFFeature>();
+		for (GFFFeature feature : featuresList) {
+			if(feature.getSeqId().equals(sequenceReference)){
+				features.add(feature);
+			}
+		}
+		return features;
+		
+	}
+
+	public Integer getNumberOfFeaturesBySequenceReference(String sequenceReference){
+		List<GFFFeature> fetureList = getFeture(sequenceReference);
+		return fetureList.size();
+	}
+	
+	public GeneProduct getGeneProduct(GFFFeature gffFeture){
+		String geneId = gffFeture.getAttributeByName(GENE_ID_ATTRIBUTE_NAME);
+		GeneProduct geneProduct = null;
+		if(geneId != null ){
+			geneProduct = geneProductMap.get(geneId);
+		} 
+		return geneProduct;
 	}
 	
 
@@ -107,7 +137,19 @@ public class GFFFile {
 	
 	public static void main(String[] args) {
 		GFFFile gffFile = new GFFFile("/data/mgb/img/zc3b/day-01/3300002194.a.gff", "/data/mgb/img/zc3b/day-01/3300002194.a.phylodist.txt", "/data/mgb/img/zc3b/day-01/3300002194.a.gene_product.txt");
+		
 		System.out.println(gffFile.size());
+		
+		List<GFFFeature> fetureBySequenceReference = gffFile.getFeture("metazooDRAFT_1192417");
+		System.out.println("TOTAL DE FEATURES:" + fetureBySequenceReference.size());
+		for (GFFFeature gffFeature : fetureBySequenceReference) {
+			System.out.println(gffFeature.getType());
+			System.out.println(gffFeature.getStart() + "-" + gffFeature.getEnd());
+			GeneProduct geneProduct = gffFile.getGeneProduct(gffFeature);
+			if(geneProduct != null){
+				System.out.println(geneProduct.getSource() + " : " + geneProduct.getProductName());
+			}
+		}
 
 
 	}
