@@ -13,9 +13,15 @@ public class GsonTest {
 		List<ReadOnContig> readsOnContig = new ArrayList<ReadOnContig>();
 		
 		
-		ReadOnContig readOnContig01 = new ReadOnContig("referenceid12331230", "CCCAAATTGTGTAGTGTACTACTA", 192, "first", 1231515, null, null);
-		ReadOnContig readOnContig02 = new ReadOnContig("asdfasdfasdf", "CCCAAATTGTGTAGTGTACTACTA", 192, "first", null, null, null);
-		ReadOnContig readOnContig03 = new ReadOnContig("121561asd51f6as1d561asdf", "CCCAAATTGTGTAGTGTACTACTA", 192, "first", 123545, "bixo x", "spice");
+		Taxon taxon = new Taxon.Builder().setTaxonomyId(12345).setScientificName("bixo x").setHank("spicie").setScore(1d).build();
+		List<Taxon> taxons = new ArrayList<Taxon>();
+		taxons.add(taxon);
+		List<Taxon> emptyTaxons = new ArrayList<Taxon>();
+		
+		
+		ReadOnContig readOnContig01 = new ReadOnContig("referenceid12331230", "CCCAAATTGTGTAGTGTACTACTA", 1, 10, 192, "first", taxons);
+		ReadOnContig readOnContig02 = new ReadOnContig("asdfasdfasdf", "CCCAAATTGTGTAGTGTACTACTA", 1, 10, 192, "first", taxons);
+		ReadOnContig readOnContig03 = new ReadOnContig("121561asd51f6as1d561asdf", "CCCAAATTGTGTAGTGTACTACTA", 1, 10, 192, "first", emptyTaxons);
 		readsOnContig.add(readOnContig01);
 		readsOnContig.add(readOnContig02);
 		readsOnContig.add(readOnContig03);
@@ -28,6 +34,7 @@ public class GsonTest {
 		String jsonString = g.toJson(contig);
 		
 		System.out.println(jsonString);
+				
 	}
 
 }

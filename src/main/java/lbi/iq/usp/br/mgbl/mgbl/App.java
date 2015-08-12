@@ -1,5 +1,7 @@
 package lbi.iq.usp.br.mgbl.mgbl;
 
+import java.io.FileNotFoundException;
+
 import lbi.iq.usp.br.mgbl.mgbl.mytaxa.MytaxaConverterFile;
 
 /**
@@ -7,7 +9,7 @@ import lbi.iq.usp.br.mgbl.mgbl.mytaxa.MytaxaConverterFile;
  *
  */
 public class App {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws FileNotFoundException {
 		
 		if(args.length > 0){
 			Integer app = new Integer(args[0]);
@@ -17,7 +19,7 @@ public class App {
 				MytaxaConverterFile.main(args);
 				break;
 			case 2:
-				MappingReader mappingReader = new MappingReader(args[1], args[2]);
+				JsonCreator mappingReader = new JsonCreator(args[1], args[2]);
 				break;	
 
 			default:
