@@ -14,6 +14,15 @@ public class Contig {
 		this.readsOnCotig = readsOnCotig;
 	}
 	
+	@Override
+	public String toString() {
+		return new StringBuilder().append("reference: ")
+		.append(reference)
+		.append("\t")
+		.append("Number of reads on contig: ")
+		.append(readsOnCotig.size()).toString();
+	}
+	
 	
 
 }

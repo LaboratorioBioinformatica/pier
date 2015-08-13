@@ -75,9 +75,9 @@ public class JsonCreator {
 			System.out.println(jsonContig);
 			
 			readsOnContigMapping.close();
-//			if(count >= 10){
-//				break;
-//			}
+			if(count >= 10){
+				break;
+			}
 			
 			nextSequence = fastaFile.nextSequence();
 			
@@ -89,7 +89,7 @@ public class JsonCreator {
 	}
 
 	private List<Taxon> findTaxonsByReadReference() {
-		Taxon taxon = new Taxon.Builder().build();
+		Taxon taxon = new Taxon.Builder().setScientificName("bixo x").build();
 		
 		List<Taxon> taxons = new ArrayList<Taxon>();
 		taxons.add(taxon);
