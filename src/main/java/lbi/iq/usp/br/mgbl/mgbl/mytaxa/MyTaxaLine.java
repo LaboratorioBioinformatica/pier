@@ -8,13 +8,15 @@ public class MyTaxaLine {
 	private String sequenceReference;
 	private String taxonomyRank;
 	private String taxonomyId;
+	private String score;
 	private String lineage;
 	
 	
-	public MyTaxaLine(String sequenceReference, String taxonomyRank, String taxonomyId, String lineage) {
+	public MyTaxaLine(String sequenceReference, String taxonomyRank, String taxonomyId, String score, String lineage) {
 		this.sequenceReference = sequenceReference;
 		this.taxonomyRank = taxonomyRank;
 		this.taxonomyId = taxonomyId;
+		this.score = score;
 		this.lineage = lineage;
 	}
 	
@@ -27,6 +29,11 @@ public class MyTaxaLine {
 		}
 		return deepestTaxonomy;
 		
+	}
+	
+	public String getCleanDeepestTaxonomy(){
+		String[] split = getDeepestTaxonomy().split(">");
+		return split[1];
 	}
 
 	public String getSequenceReference() {
@@ -47,6 +54,10 @@ public class MyTaxaLine {
 		}
 		return hasSpecieLevel;
 		
+	}
+	
+	public String getScore(){
+		return this.score;
 	}
 	
 	public String getSpecie(){

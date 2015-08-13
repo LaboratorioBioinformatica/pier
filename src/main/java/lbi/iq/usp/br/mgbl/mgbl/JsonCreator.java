@@ -9,33 +9,43 @@ import htsjdk.samtools.reference.FastaSequenceFile;
 import htsjdk.samtools.reference.ReferenceSequence;
 import htsjdk.samtools.util.StringUtil;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
+import lbi.iq.usp.br.mgbl.mgbl.config.SampleConfigFile;
 import lbi.iq.usp.br.mgbl.mgbl.mytaxa.MyTaxaFile;
 import lbi.iq.usp.br.mgbl.mgbl.mytaxa.MyTaxaLine;
 
 import com.google.gson.Gson;
 
-import sun.org.mozilla.javascript.internal.json.JsonParser;
 
 
 public class JsonCreator {
+	
+	SampleConfigFile sampleConfig;
+	Hashtable<String,List<MyTaxaLine>> taxonomyMultiHashTableFromFile;
+	
 	private static final String INDEX_BAM_EXT = ".bai";
 	
 	
-	public JsonCreator(String contigFilePath, String mappingFilePath) throws FileNotFoundException {
-		load(contigFilePath, mappingFilePath);
+	public JsonCreator(String sampleConfigFilePath) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(sampleConfigFilePath));
+		Gson gson = new Gson();
+		sampleConfig = gson.fromJson(br, SampleConfigFile.class);
+		load();
 	}
 
-	private void load(String contigFilePath, String mappingFilePath) throws FileNotFoundException {
+	private void load() throws FileNotFoundException {
+		String contigFilePath =  sampleConfig.getContigFilePath();
+		String mappingFilePath = sampleConfig.getMappingFilePath();
 		
-		
-//		String mytaxaSampleFilePath = "";
-//		List<MyTaxaLine> loadTaxonomyFileList = new MyTaxaFile().loadTaxonomyFileList(mytaxaSampleFilePath);
+		taxonomyMultiHashTableFromFile = new MyTaxaFile().loadTaxonomyMultiHashTableFromFile(sampleConfig.getTaxonomyFilePath());
 		
 		
 		FastaSequenceFile fastaFile = new FastaSequenceFile(new File(contigFilePath), Boolean.FALSE);
@@ -59,12 +69,11 @@ public class JsonCreator {
 			List<ReadOnContig> readsOnContig = new ArrayList<ReadOnContig>();
 			while (readsOnContigMapping.hasNext()) {
 				SAMRecord next = readsOnContigMapping.next();
+				String readReference = next.getReadName();
 				
-				List<Taxon> taxons = findTaxonsByReadReference();
+				List<Taxon> taxons = findTaxonsByReadReference(readReference);
 				
-				
-//				System.out.println(next.getReadName() +" = " +  );
-				ReadOnContig readOnContig = new ReadOnContig(next.getReadName(), next.getReadString(), next.getAlignmentStart(), next.getAlignmentEnd(), next.getFlags(), getPair(next.getFirstOfPairFlag()), taxons);
+				ReadOnContig readOnContig = new ReadOnContig(readReference, next.getReadString(), next.getAlignmentStart(), next.getAlignmentEnd(), next.getFlags(), getPair(next.getFirstOfPairFlag()), taxons);
 				readsOnContig.add(readOnContig);
 				
 			}
@@ -75,24 +84,36 @@ public class JsonCreator {
 			System.out.println(jsonContig);
 			
 			readsOnContigMapping.close();
-			if(count >= 10){
-				break;
-			}
+//			if(count >= 10){
+//				break;
+//			}
 			
 			nextSequence = fastaFile.nextSequence();
 			
 		}
 		
 		fastaFile.close();
-		System.out.println("DONE!");
 		
 	}
 
-	private List<Taxon> findTaxonsByReadReference() {
-		Taxon taxon = new Taxon.Builder().setScientificName("bixo x").build();
+	private List<Taxon> findTaxonsByReadReference(String readReference) {
 		
-		List<Taxon> taxons = new ArrayList<Taxon>();
-		taxons.add(taxon);
+		List<MyTaxaLine> mytaxaList = taxonomyMultiHashTableFromFile.get(readReference);
+		List<Taxon> taxons = null;
+		
+		if(mytaxaList != null){
+			taxons = new ArrayList<Taxon>();
+			for (MyTaxaLine line : mytaxaList) {
+				String deepestTaxonomy = line.getCleanDeepestTaxonomy();
+				Taxon taxon = new Taxon.Builder().setTaxonomyId(new Integer(line.getTaxonomyId()))
+						.setScore(new Double(line.getScore()))
+						.setScientificName(deepestTaxonomy)
+						.setHank(line.getTaxonomyRank())
+						.build();
+				taxons.add(taxon);
+			}
+			
+		}
 		return taxons;
 	}
 

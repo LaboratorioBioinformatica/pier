@@ -11,6 +11,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class MyTaxaFile {
 
@@ -27,15 +28,55 @@ public class MyTaxaFile {
 		scanner.useDelimiter(BREAK_LINE_OR_TAB);
 		while (scanner.hasNext()) {
 			String sequenceReference = scanner.next();
-			String biologicalHierarchyType = scanner.next().concat(SPACE).concat(scanner.next());
+			String biologicalHierarchyType = scanner.next(); 
+			String score = scanner.next();
 			String taxonomyId = scanner.next();
 			String biologicalHierarchy = scanner.next();
-			hashTableMytaxaLine.put(sequenceReference.split(SPACE)[0], new MyTaxaLine(sequenceReference, biologicalHierarchyType, taxonomyId, biologicalHierarchy));
+			hashTableMytaxaLine.put(sequenceReference.split(SPACE)[0], new MyTaxaLine(sequenceReference, biologicalHierarchyType, taxonomyId, score, biologicalHierarchy));
 		
 		}
 		
 		scanner.close();
 		return hashTableMytaxaLine;
+	}
+	
+	public Hashtable<String, List<MyTaxaLine>> loadTaxonomyMultiHashTableFromFile(String fullFilePath) throws FileNotFoundException{
+		
+		Scanner scanner = new Scanner(new FileReader(fullFilePath));
+		Hashtable<String, List<MyTaxaLine>>  multiHashTableMytaxaLine = new Hashtable<String, List<MyTaxaLine>>();
+		 
+		scanner.useDelimiter(BREAK_LINE_OR_TAB);
+		
+		while (scanner.hasNext()) {
+			String sequenceReference = scanner.next();
+			String sequenceReferenceWithoutPairInformation = sequenceReference.split(SPACE)[0];
+			String biologicalHierarchyType = scanner.next(); 
+			String score = scanner.next();
+			String taxonomyId = scanner.next();
+			String biologicalHierarchy = scanner.next();
+			
+			MyTaxaLine myTaxaLine = new MyTaxaLine(sequenceReference, biologicalHierarchyType, taxonomyId, score, biologicalHierarchy);
+			
+			if( ! "NA".equals(myTaxaLine.getTaxonomyId())){
+				
+				List<MyTaxaLine> mytaxaLineList = multiHashTableMytaxaLine.get(sequenceReferenceWithoutPairInformation);
+				
+				if(mytaxaLineList == null){
+					List<MyTaxaLine> hits = new ArrayList<MyTaxaLine>();
+					hits.add(myTaxaLine);
+					multiHashTableMytaxaLine.put(sequenceReferenceWithoutPairInformation, hits);
+				} else {
+					mytaxaLineList.add(myTaxaLine);
+				}
+				
+			}
+			
+			
+			
+		}
+		
+		scanner.close();
+		return multiHashTableMytaxaLine;
 	}
 	
 	public List<MyTaxaLine> loadTaxonomyFileList(String fullFilePath) throws FileNotFoundException{
@@ -46,10 +87,11 @@ public class MyTaxaFile {
 		scanner.useDelimiter(BREAK_LINE_OR_TAB);
 		while (scanner.hasNext()) {
 			String sequenceReference = scanner.next();
-			String biologicalHierarchyType = scanner.next().concat(SPACE).concat(scanner.next());
+			String biologicalHierarchyType = scanner.next(); 
+			String score = scanner.next();
 			String taxonomyId = scanner.next();
 			String biologicalHierarchy = scanner.next();
-			list.add(new MyTaxaLine(sequenceReference, biologicalHierarchyType, taxonomyId, biologicalHierarchy));
+			list.add(new MyTaxaLine(sequenceReference, biologicalHierarchyType, taxonomyId, score, biologicalHierarchy));
 		}
 		scanner.close();
 		return list;
