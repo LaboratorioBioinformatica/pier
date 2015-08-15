@@ -1,4 +1,4 @@
-package lbi.usp.br.caravela;
+package lbi.usp.br.caravela.dto;
 
 public class Taxon {
 	

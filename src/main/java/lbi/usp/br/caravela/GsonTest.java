@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
+import lbi.usp.br.caravela.dto.ReadOnContig;
+import lbi.usp.br.caravela.dto.Taxon;
+
 public class GsonTest {
 	
 	public static void main(String[] args) {

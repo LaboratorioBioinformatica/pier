@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 import com.google.gson.Gson;
 
+import lbi.usp.br.caravela.dto.Contig;
+
 public class JsonReader {
 	
 	

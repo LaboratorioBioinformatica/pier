@@ -1,12 +1,17 @@
-package lbi.usp.br.caravela;
+package lbi.usp.br.caravela.dto;
 
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
+
+
 public class ReadOnContig {
-	
 	private String reference;
 	private String sequence;
+	@SerializedName("start")
 	private Integer startAlignment;
+	@SerializedName("end")
 	private Integer endAlignment;
 	private Integer flag;
 	private String pair;

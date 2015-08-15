@@ -51,7 +51,6 @@ public class GFFFeature {
 		
 	}
 
-
 	public String getSeqId() {
 		return seqId;
 	}

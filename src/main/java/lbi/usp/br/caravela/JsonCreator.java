@@ -19,6 +19,12 @@ import java.util.Hashtable;
 import java.util.List;
 
 import lbi.usp.br.caravela.config.SampleConfigFile;
+import lbi.usp.br.caravela.dto.Contig;
+import lbi.usp.br.caravela.dto.Feature;
+import lbi.usp.br.caravela.dto.GeneProduct;
+import lbi.usp.br.caravela.dto.PhiloDist;
+import lbi.usp.br.caravela.dto.ReadOnContig;
+import lbi.usp.br.caravela.dto.Taxon;
 import lbi.usp.br.caravela.img.GFFFeature;
 import lbi.usp.br.caravela.img.GFFFileManager;
 import lbi.usp.br.caravela.img.GeneProductFileManager;
