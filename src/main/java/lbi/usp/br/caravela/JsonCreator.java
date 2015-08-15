@@ -108,9 +108,9 @@ public class JsonCreator {
 			System.out.println(jsonContig);
 			
 			readsOnContigMapping.close();
-//			if(count >= 10){
-//				break;
-//			}
+			if(count >= 10){
+				break;
+			}
 			
 			nextSequence = fastaFile.nextSequence();
 			
@@ -179,13 +179,11 @@ public class JsonCreator {
 	}
 
 	private  String getPair(boolean firstOfPairFlag) {
-		
 		if(firstOfPairFlag){
 			return "first";
 		} else {
 			return "second";
 		}
-		
 	}
 	
 	

@@ -7,18 +7,15 @@ import com.google.gson.annotations.SerializedName;
 
 
 public class ReadOnContig {
-	private String reference;
-	private String sequence;
+	private final String reference;
+	private final String sequence;
 	@SerializedName("start")
-	private Integer startAlignment;
+	private final Integer startAlignment;
 	@SerializedName("end")
-	private Integer endAlignment;
-	private Integer flag;
-	private String pair;
-	private List<Taxon> taxons;
-	
-	public ReadOnContig() {
-	}
+	private final Integer endAlignment;
+	private final Integer flag;
+	private final String pair;
+	private final List<Taxon> taxons;
 	
 	public ReadOnContig(String reference, String sequence, Integer startAlignment, Integer endAlignment, Integer flag, String pair, List<Taxon> taxons) {
 		this.reference = reference;
