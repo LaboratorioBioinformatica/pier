@@ -9,27 +9,20 @@ import lbi.usp.br.caravela.mytaxa.MytaxaConverterFile;
  *
  */
 public class App {
+	
+	
+	private static final String MY_TAXA_CONVERTER = "mytaxa";
+	private static final String FEATURES_JOIN = "join";
+
 	public static void main(String[] args) throws IOException {
+		String app = args[0];
 		
-		if(args.length > 0){
-			Integer app = new Integer(args[0]);
-			
-			switch (app) {
-			case 1:
-				MytaxaConverterFile.main(args);
-				break;
-			case 2:
-				JsonCreator mappingReader = new JsonCreator(args[1]);
-				break;	
-
-			default:
-				System.out.println("app: " +  app + " not found!");
-				break;
-			}
+		if(app.equals(MY_TAXA_CONVERTER)){
+			MytaxaConverterFile.main(args);
+		} else if(app.equals(FEATURES_JOIN)){
+			JsonCreator mappingReader = new JsonCreator(args[1]);
 		} else {
-			System.out.println("invalid command");
+			System.out.println("app: " +  app + " not found!");
 		}
-		
-
 	}
 }
