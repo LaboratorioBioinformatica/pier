@@ -178,11 +178,11 @@ public class JsonCreator {
 		return taxons;
 	}
 
-	private  String getPair(boolean firstOfPairFlag) {
+	private  Integer getPair(boolean firstOfPairFlag) {
 		if(firstOfPairFlag){
-			return "first";
+			return 1;
 		} else {
-			return "second";
+			return 2;
 		}
 	}
 	

@@ -14,17 +14,17 @@ public class ReadOnContig {
 	@SerializedName("end")
 	private final Integer endAlignment;
 	private final Integer flag;
-	private final String pair;
+	private final Integer pair;
 	private final List<Taxon> taxons;
 	
-	public ReadOnContig(String reference, String sequence, Integer startAlignment, Integer endAlignment, Integer flag, String pair, List<Taxon> taxons) {
+	public ReadOnContig(String reference, String sequence, Integer startAlignment, Integer endAlignment, Integer flag, Integer pair, List<Taxon> taxons) {
 		this.reference = reference;
 		this.sequence = sequence;
 		this.startAlignment = startAlignment;
 		this.endAlignment = endAlignment;
 		this.flag = flag;
 		this.pair = pair;
-		this.taxons = taxons;
+		this.taxons = taxons;	
 		
 	}
 	
