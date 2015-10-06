@@ -46,6 +46,9 @@ public class Taxon {
 		this.hank = builder.hank;
 		this.score = builder.score;
 	}
-	
 
+	public Double getScore() {
+		return score;
+	}
+	
 }

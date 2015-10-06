@@ -95,9 +95,9 @@ public class JsonCreator {
 				SAMRecord next = readsOnContigMapping.next();
 				String readReference = next.getReadName();
 				
-				List<Taxon> taxons = findTaxonsByReadReference(readReference);
+				Taxon taxon = findTaxonWithGreaterScoreByReadReference(readReference);
 				
-				ReadOnContig readOnContig = new ReadOnContig(readReference, next.getReadString(), next.getAlignmentStart(), next.getAlignmentEnd(), next.getFlags(), getPair(next.getFirstOfPairFlag()), taxons);
+				ReadOnContig readOnContig = new ReadOnContig(readReference, next.getReadString(), next.getAlignmentStart(), next.getAlignmentEnd(), next.getFlags(), getPair(next.getFirstOfPairFlag()), taxon);
 				readsOnContig.add(readOnContig);
 				
 			}
@@ -108,9 +108,9 @@ public class JsonCreator {
 			System.out.println(jsonContig);
 			
 			readsOnContigMapping.close();
-			if(count >= 10){
-				break;
-			}
+//			if(count >= 10){
+//				break;
+//			}
 			
 			nextSequence = fastaFile.nextSequence();
 			
@@ -159,11 +159,12 @@ public class JsonCreator {
 		return geneProduct;
 	}
 
-	private List<Taxon> findTaxonsByReadReference(String readReference) {
+	private Taxon findTaxonWithGreaterScoreByReadReference(String readReference) {
 		List<MyTaxaLine> mytaxaList = taxonomyMultiHashTableFromFile.get(readReference);
-		List<Taxon> taxons = null;
+		
+		Taxon selectedTaxon = null;
+		
 		if(mytaxaList != null){
-			taxons = new ArrayList<Taxon>();
 			for (MyTaxaLine line : mytaxaList) {
 				String deepestTaxonomy = line.getCleanDeepestTaxonomy();
 				Taxon taxon = new Taxon.Builder().setTaxonomyId(new Integer(line.getTaxonomyId()))
@@ -171,11 +172,21 @@ public class JsonCreator {
 						.setScientificName(deepestTaxonomy)
 						.setHank(line.getTaxonomyRank())
 						.build();
-				taxons.add(taxon);
+				
+				if(selectedTaxon == null ){
+					selectedTaxon = taxon;
+				} else {
+					
+					if(taxon.getScore() > selectedTaxon.getScore()){
+						selectedTaxon = taxon;
+					}
+					
+				}
 			}
 			
 		}
-		return taxons;
+		
+		return selectedTaxon;
 	}
 
 	private  Integer getPair(boolean firstOfPairFlag) {
