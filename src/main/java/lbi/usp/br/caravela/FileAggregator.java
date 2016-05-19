@@ -13,6 +13,7 @@ import htsjdk.samtools.SamReaderFactory;
 import htsjdk.samtools.reference.FastaSequenceFile;
 import lbi.usp.br.caravela.config.SampleConfigFile;
 import lbi.usp.br.caravela.config.TaxonomyFileConfig;
+import lbi.usp.br.caravela.config.TaxonomyProvider;
 
 public class FileAggregator {
 	
@@ -47,7 +48,8 @@ public class FileAggregator {
 		
 		//precisa verificar o provider e depois ler o arquivo baseado no provider.
 		TaxonomyFileConfig taxonomyFileConfig = sampleConfigFile.getTaxonomy();
-		String taxonomyProviderName = taxonomyFileConfig.getProviderName();
+		
+		TaxonomyProvider taxonomyProviderName = taxonomyFileConfig.getProviderName();
 		
 		String taxonomyFilePath = taxonomyFileConfig.getTaxonomyFilePath();
 		File taxonomyFile = getAndVerifyIfFileExists(taxonomyFilePath, TAXONOMY_FILE_TYPE);

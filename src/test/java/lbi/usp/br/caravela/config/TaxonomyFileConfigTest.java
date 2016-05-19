@@ -8,7 +8,7 @@ public class TaxonomyFileConfigTest {
 	
 	@Test
 	public void testGetters() throws Exception {
-		String provider = "mytaxa";
+		TaxonomyProvider provider = TaxonomyProvider.MYTAXA;
 		String taxonomy = "files/taxonomy/sample-01-taxonomy.tsv";
 		TaxonomyFileConfig target = new TaxonomyFileConfig(provider, taxonomy);
 		
@@ -19,15 +19,15 @@ public class TaxonomyFileConfigTest {
 	@Test
 	public void testEquals() throws Exception {
 		
-		String myTaxaProvider = "mytaxa";
-		String tvsProvider = "tvs";
+		TaxonomyProvider myTaxaProvider = TaxonomyProvider.MYTAXA;
+		TaxonomyProvider ktClassifyBlastProvider = TaxonomyProvider.KT_CLASSIFY_BLAST;
 		
 		String myTaxaTaxonomyPath = "files/taxonomy/sample-01-taxonomy.mytaxa";
 		String TVSTaxonomyPath = "files/taxonomy/sample-01-taxonomy.tsv";
 		
 		TaxonomyFileConfig target = new TaxonomyFileConfig(myTaxaProvider, myTaxaTaxonomyPath);
 		TaxonomyFileConfig equalstarget = new TaxonomyFileConfig(myTaxaProvider, myTaxaTaxonomyPath);
-		TaxonomyFileConfig targetTVS = new TaxonomyFileConfig(tvsProvider, TVSTaxonomyPath);
+		TaxonomyFileConfig targetTVS = new TaxonomyFileConfig(ktClassifyBlastProvider, TVSTaxonomyPath);
 		
 		
 		Assert.assertTrue(target.equals(target));
