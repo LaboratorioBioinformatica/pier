@@ -1,0 +1,15 @@
+{
+  "sample": "sample-01",
+  "contig": "files/contig/sample-01-contig.fasta",
+  "mapping": "files/mapping/sample-01-mapping.bam",
+  "taxonomy": {"provider": "tsv", "taxonomy": "files/taxonomy/sample-01-taxonomy.tsv"},
+  
+  "functional": {
+    "provider": "img_m",
+    "gff": "/data/metazoo/zc4/img/DAY-01-3300005064.gff",
+    "files": {
+      "PhiloDistFile": "/data/metazoo/zc4/img/DAY-01-3300005064-phylodist.txt",
+      "GeneProductFile": "/data/metazoo/zc4/img/DAY-01-3300005064-gene_product.txt"
+    }
+  }
+}

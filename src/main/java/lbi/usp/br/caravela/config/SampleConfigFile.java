@@ -1,12 +1,12 @@
 package lbi.usp.br.caravela.config;
 
-import java.util.HashMap;
+import lbi.usp.br.caravela.exeption.DomainValidateException;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class SampleConfigFile {
 	
+	private static final int MIN_SAMPLE_LENGTH = 3;
+
 	private String sample;
 	private String contig;
 	private String mapping;
@@ -14,11 +14,18 @@ public class SampleConfigFile {
 	private FunctionalCofigFile functional;
 	
 	public SampleConfigFile(String sample, String contig, String mappingFilePath, TaxonomyFileConfig taxonomyFileConfig, FunctionalCofigFile functionalCofigFile) {
-		this.sample = sample;
-		this.contig = contig; 
-		this.mapping = mappingFilePath;
-		this.taxonomy = taxonomyFileConfig;
+		setSample(sample);
+		setContig(contig);
+		setMappingFilePath(mappingFilePath);
+		setTaxonomyFileConfig(taxonomyFileConfig);
 		this.functional = functionalCofigFile;
+	}
+	
+	public void validate(){
+		validateSampleName(sample);
+		validateContig(contig);
+		validateMapping(mapping);
+		validateTaxonomyFileConfig(taxonomy);
 	}
 	
 	public String getSampleName(){
@@ -33,41 +40,61 @@ public class SampleConfigFile {
 		return mapping;
 	}
 	
-	public String getTaxonomyFilePath(){
-		return taxonomy.getTaxonomyFilePath();
-	}
-	
-	public String getGFFFilePath(){
-		return functional.getGFFFilePath();
-	}
-	
-	public String getGeneProductFilePath(){
-		return functional.getGeneProductFilePath();
-	}
-	
-	public String getPhiloDistFilePath(){
-		return functional.getPhiloDistFilePath();
+	public TaxonomyFileConfig getTaxonomy(){
+		return taxonomy;
 	}
 	
 	
+	public FunctionalCofigFile getFunctionalCofigFile(){
+		return functional;
+	}
 	
-	public static void main(String[] args) {
-		TaxonomyFileConfig taxonomyFileConfig = new TaxonomyFileConfig("mytaxa", "/data/mgb/mytaxa/ZC3DAY01IQMSIPER01R1-mytaxa-output.txt");
-		HashMap<String, String> fileList = new HashMap<String, String>();
-		fileList.put("GeneProductFile", "/data/mgb/annotation/ZC3b-day-01-3300002194-gene_product.txt");
-		fileList.put("PhiloDistFile", "/data/mgb/annotation/ZC3b-day-01-3300002194-phylodist.txt");
-		
-		FunctionalCofigFile functionalCofigFile = new FunctionalCofigFile("img_m", "/data/mgb/annotation/ZC3b-day-01-3300002194.gff", fileList);
-		
-		SampleConfigFile sampleConfigFile = new SampleConfigFile("zc3b-day-01", "/data/mgb/contig/ZC3b-day-01-3300002194.fasta", "/data/mgb/mapping/ZC3b-day-01-sorted.bam", taxonomyFileConfig, functionalCofigFile);
-		 Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		 
-		System.out.println(gson.toJson(sampleConfigFile));
-		
+	private void setSample(String sample){
+		validateSampleName(sample);
+		this.sample = sample;
+	}
+	
+	
+	private void setContig(String contig){
+		validateContig(contig);
+		this.contig = contig;
 		
 	}
 	
+
+	private void setMappingFilePath(String mappingFilePath){
+		validateMapping(mappingFilePath);
+		this.mapping = mappingFilePath;
+	}
 	
+	private void setTaxonomyFileConfig(TaxonomyFileConfig taxonomyFileConfig){
+		validateTaxonomyFileConfig(taxonomyFileConfig);
+		this.taxonomy = taxonomyFileConfig;
+	}
 	
+	private void validateTaxonomyFileConfig(TaxonomyFileConfig taxonomyFileConfig) {
+		if(taxonomyFileConfig  == null ){
+			throw new DomainValidateException("Invalid taxonomy file config");
+		} 
+	}
+
+	private void validateSampleName(String sample) {
+		if(sample  == null || sample.isEmpty() || sample.length() < MIN_SAMPLE_LENGTH){
+			throw new DomainValidateException("Invalid sample name");
+		} 
+	}
+	
+	private void validateContig(String contig) {
+		if(contig  == null || contig.isEmpty()){
+			throw new DomainValidateException("Invalid contig file path");
+		} 
+	}
+	
+	private void validateMapping(String mapping) {
+		if(mapping  == null || mapping.isEmpty()){
+			throw new DomainValidateException("Invalid mapping file path");
+		} 
+	}
+
 
 }

@@ -64,14 +64,11 @@ public class JsonCreator {
 		SamReader myReader = SamReaderFactory.makeDefault().open(resource);
 		
 		
-		taxonomyMultiHashTableFromFile = new MyTaxaFile().loadTaxonomyMultiHashTableFromFile(sampleConfig.getTaxonomyFilePath());
+//		taxonomyMultiHashTableFromFile = new MyTaxaFile().loadTaxonomyMultiHashTableFromFile(sampleConfig.getTaxonomyFilePath());
 
-		gffFileManager = new GFFFileManager(sampleConfig.getGFFFilePath());
-		geneProductFileManager = new GeneProductFileManager(sampleConfig.getGeneProductFilePath());
-		philoDistFileManager = new PhiloDistFileManager(sampleConfig.getPhiloDistFilePath());
-		
-		
-		
+//		gffFileManager = new GFFFileManager(sampleConfig.getGFFFilePath());
+//		geneProductFileManager = new GeneProductFileManager(sampleConfig.getGeneProductFilePath());
+//		philoDistFileManager = new PhiloDistFileManager(sampleConfig.getPhiloDistFilePath());
 		
 		
 		
@@ -85,7 +82,6 @@ public class JsonCreator {
 			String contigSequence = StringUtil.bytesToString(nextSequence.getBases());
 			
 			List<Feature> featureList =	createFeatureList(gffFileManager.getFeture(referenceContig));
-			
 			
 			
 			SAMRecordIterator readsOnContigMapping = myReader.query(referenceContig, 0, 0, true);
