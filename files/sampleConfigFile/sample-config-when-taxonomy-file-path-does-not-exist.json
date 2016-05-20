@@ -2,7 +2,7 @@
   "sample": "sample-01",
   "contig": "files/contig/sample-01-contig.fasta",
   "mapping": "files/mapping/sample-01-mapping-sorted.bam",
-  "taxonomy": {"provider": "tsv", "taxonomy": "files/taxonomy/no-sample-01-taxonomy.tsv"},
+  "taxonomy": {"provider": "DEFAULT", "taxonomy": "files/taxonomy/no-sample-01-taxonomy.tsv"},
   
   "functional": {
     "provider": "no"

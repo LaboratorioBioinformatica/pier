@@ -13,6 +13,12 @@ public class TaxonomyFileConfig {
 		setTaxonomy(taxonomy);
 	}
 	
+	public void validate(){
+		validateTaxonomyFilePath(taxonomy);
+		validateTaxonomyProvider(provider);
+		
+	}
+	
 	
 	private void setProvider(TaxonomyProvider provider) {
 		validateTaxonomyProvider(provider);

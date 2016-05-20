@@ -41,7 +41,7 @@ public class SampleConfigFileTest {
 	}
 
 	private TaxonomyFileConfig createValidTaxonomyFileConfig() {
-		TaxonomyProvider taxonomyProvider = TaxonomyProvider.MYTAXA;
+		TaxonomyProvider taxonomyProvider = TaxonomyProvider.DEFAULT;
 		String taxonomy = "files/taxonomy/sample-01-taxonomy.tsv";
 		return new TaxonomyFileConfig(taxonomyProvider, taxonomy);
 	}

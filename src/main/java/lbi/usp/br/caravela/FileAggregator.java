@@ -49,7 +49,10 @@ public class FileAggregator {
 		//precisa verificar o provider e depois ler o arquivo baseado no provider.
 		TaxonomyFileConfig taxonomyFileConfig = sampleConfigFile.getTaxonomy();
 		
+		taxonomyFileConfig.validate();
+		
 		TaxonomyProvider taxonomyProviderName = taxonomyFileConfig.getProviderName();
+		
 		
 		String taxonomyFilePath = taxonomyFileConfig.getTaxonomyFilePath();
 		File taxonomyFile = getAndVerifyIfFileExists(taxonomyFilePath, TAXONOMY_FILE_TYPE);
