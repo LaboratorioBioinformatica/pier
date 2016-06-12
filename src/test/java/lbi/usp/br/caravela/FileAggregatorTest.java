@@ -63,6 +63,15 @@ public class FileAggregatorTest {
 		fileAggregator.createJsonFile();
 	}
 	
+	@Test
+	public void testName() throws Exception {
+		
+		String fileSamplePath = "files/sampleConfigFile/sample-01.json";
+		FileAggregator fileAggregator = new FileAggregator(fileSamplePath);
+		fileAggregator.createJsonFile();
+		
+	}
+	
 	
 
 }

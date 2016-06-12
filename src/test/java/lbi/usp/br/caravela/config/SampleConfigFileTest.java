@@ -35,7 +35,7 @@ public class SampleConfigFileTest {
 	}
 
 	private FunctionalCofigFile createValidFunctionConfigFile() {
-		String functionProvider = "img_m";
+		FunctionProvider functionProvider = FunctionProvider.IMG_M;
 		HashMap<String, String> files = new HashMap<String, String>();
 		return new FunctionalCofigFile(functionProvider, files);
 	}

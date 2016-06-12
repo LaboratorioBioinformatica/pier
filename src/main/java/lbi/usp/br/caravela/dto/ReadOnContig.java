@@ -32,5 +32,53 @@ public class ReadOnContig {
 			return false;
 		}
 	}
+	
+	public String getReference() {
+		return reference;
+	}
 
+	public String getSequence() {
+		return sequence;
+	}
+
+	public Integer getStartAlignment() {
+		return startAlignment;
+	}
+
+	public Integer getEndAlignment() {
+		return endAlignment;
+	}
+
+	public Integer getFlag() {
+		return flag;
+	}
+
+	public Integer getPair() {
+		return pair;
+	}
+
+	public Taxon getTaxon() {
+		return taxon;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(! (obj instanceof ReadOnContig)) {
+			return false;
+		}
+		if(obj == this){
+			return true;
+		}
+		
+		ReadOnContig readOnContig = (ReadOnContig) obj;
+		
+		return this.reference.equals(readOnContig.getReference()) && 
+				this.sequence.equals(readOnContig.getSequence()) && 
+				this.startAlignment.equals(readOnContig.getStartAlignment()) &&
+				this.endAlignment.equals(readOnContig.getEndAlignment()) &&
+				this.flag.equals(readOnContig.getFlag()) &&
+				this.pair.equals(readOnContig.getPair());
+	}
+	
+	
 }
