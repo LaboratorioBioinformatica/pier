@@ -1,16 +1,19 @@
 package lbi.usp.br.caravela.config;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-
 import htsjdk.samtools.SAMRecord;
 import htsjdk.samtools.SAMRecordIterator;
 import htsjdk.samtools.SamInputResource;
 import htsjdk.samtools.SamReader;
 import htsjdk.samtools.SamReaderFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import lbi.usp.br.caravela.dto.ReadOnContig;
+import lbi.usp.br.caravela.dto.Taxon;
 
 public class MappingFileManager {
 	
@@ -33,14 +36,17 @@ public class MappingFileManager {
 	}
 	
 	
-	public List<ReadOnContig> getReadsOnContig(String reference){
+	public List<ReadOnContig> getReadsOnContig(String reference, HashMap<String, Integer> taxonomyHashMap){
 		
 		SAMRecordIterator queryResult = SAMReader.query(reference, START_REFERENCE, END_REFERENCE, Boolean.TRUE);
 		List<ReadOnContig> readsOnContig = new ArrayList<ReadOnContig>();
 		
 		while(queryResult.hasNext()){
 			SAMRecord currentSAMRecord = queryResult.next();
-			ReadOnContig readOnContig = new ReadOnContig(reference, currentSAMRecord.getReadString(), currentSAMRecord.getAlignmentStart(), currentSAMRecord.getAlignmentEnd(), currentSAMRecord.getFlags(), getPair(currentSAMRecord.getFirstOfPairFlag()), null);
+			
+			String readName = currentSAMRecord.getReadName();
+			Taxon taxon = getTaxon(taxonomyHashMap, readName);
+			ReadOnContig readOnContig = new ReadOnContig(readName, currentSAMRecord.getReadString(), currentSAMRecord.getAlignmentStart(), currentSAMRecord.getAlignmentEnd(), currentSAMRecord.getFlags(), getPair(currentSAMRecord.getFirstOfPairFlag()), taxon);
 			readsOnContig.add(readOnContig);
 		}
 		
@@ -49,6 +55,19 @@ public class MappingFileManager {
 	}
 	
 	
+	private Taxon getTaxon(HashMap<String, Integer> taxonomyHashMap, String readName) {
+		
+		Integer taxonomyId = taxonomyHashMap.get(readName);
+		
+		if(taxonomyId != null ){
+			return new Taxon.Builder().setTaxonomyId(taxonomyId).build();
+		} else {
+			return null;
+		}
+		
+	}
+
+
 	private  Integer getPair(boolean firstOfPairFlag) {
 		if(firstOfPairFlag){
 			return 1;

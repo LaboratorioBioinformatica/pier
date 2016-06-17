@@ -1,32 +1,34 @@
 package lbi.usp.br.caravela;
 
+import htsjdk.samtools.reference.FastaSequenceFile;
+import htsjdk.samtools.reference.ReferenceSequence;
+import htsjdk.samtools.util.StringUtil;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import lbi.usp.br.caravela.config.MappingFileManager;
+import lbi.usp.br.caravela.config.SampleConfigFile;
+import lbi.usp.br.caravela.config.TaxonomyFileConfig;
+import lbi.usp.br.caravela.config.TaxonomyFileManager;
+import lbi.usp.br.caravela.dto.Contig;
+import lbi.usp.br.caravela.dto.Feature;
+import lbi.usp.br.caravela.dto.ReadOnContig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import htsjdk.samtools.SamInputResource;
-import htsjdk.samtools.SamReader;
-import htsjdk.samtools.SamReaderFactory;
-import htsjdk.samtools.reference.FastaSequenceFile;
-import lbi.usp.br.caravela.config.SampleConfigFile;
-import lbi.usp.br.caravela.config.TaxonomyFileConfig;
-import lbi.usp.br.caravela.config.TaxonomyFileManager;
-
 public class FileAggregator {
 	
 	
 	private static final String CONTIG_FILE_TYPE = "contig";
-	private static final String TAXONOMY_FILE_TYPE = "taxonomy";
-	private static final String MAPPING_FILE_TYPE = "mapping";
-	private static final String BAM_EXT = ".bam";
-	private static final String INDEX_BAM_EXT = ".bai";
 	private final FileReader fileReader;
 	
 	private static final Logger logger = LoggerFactory.getLogger(FileAggregator.class);
@@ -46,14 +48,34 @@ public class FileAggregator {
 		File contigFile = getAndVerifyIfFileExists(sampleConfigFile.getContigFilePath(), CONTIG_FILE_TYPE);
 		FastaSequenceFile contigFileFasta = new FastaSequenceFile(contigFile, Boolean.FALSE);
 
-		File mappingFile = getAndVerifyIfFileExists(sampleConfigFile.getMappingFilePath(), MAPPING_FILE_TYPE); 
-		File mappingFileIndex = getAndVerifyIfFileExists(sampleConfigFile.getMappingFilePath().replace(BAM_EXT, INDEX_BAM_EXT), MAPPING_FILE_TYPE);
+		HashMap<String, Integer> taxonomyHashMap = getTaxonomyHashMap(sampleConfigFile);
+
+		MappingFileManager mappingFileManager = new MappingFileManager(sampleConfigFile);
 		
-		HashMap<String,Integer> taxonomyHashMap = getTaxonomyHashMap(sampleConfigFile);
+		ReferenceSequence nextSequence = contigFileFasta.nextSequence();
+
+		System.out.println("[");
 		
-		SamInputResource resource = SamInputResource.of(mappingFile).index(mappingFileIndex);
-		SamReader myReader = SamReaderFactory.makeDefault().open(resource);
+		while (nextSequence != null) {
+			String contigReference = nextSequence.getName();
+			List<Feature> featureList = new ArrayList<Feature>();
+			
+			List<ReadOnContig> readsOnContig = mappingFileManager.getReadsOnContig(contigReference, taxonomyHashMap);
+			String contigSequence = StringUtil.bytesToString(nextSequence.getBases());
+			
+			Contig contig = new Contig(contigReference, contigSequence, featureList , readsOnContig);
+			
+			nextSequence = contigFileFasta.nextSequence();
+			
+			System.out.println(gson.toJson(contig));
+			if(nextSequence != null){
+				System.out.print(",");
+			}
+			
+		}
 		
+		contigFileFasta.close();
+		System.out.println("]");
 		
 		
 		

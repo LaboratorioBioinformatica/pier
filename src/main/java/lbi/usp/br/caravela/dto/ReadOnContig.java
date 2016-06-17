@@ -77,6 +77,7 @@ public class ReadOnContig {
 				this.startAlignment.equals(readOnContig.getStartAlignment()) &&
 				this.endAlignment.equals(readOnContig.getEndAlignment()) &&
 				this.flag.equals(readOnContig.getFlag()) &&
+				this.taxon.equals(readOnContig.getTaxon()) &&
 				this.pair.equals(readOnContig.getPair());
 	}
 	

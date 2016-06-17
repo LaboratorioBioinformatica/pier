@@ -47,8 +47,34 @@ public class Taxon {
 		this.score = builder.score;
 	}
 
+	public Integer getTaxonomyId() {
+		return taxonomyId;
+	}
+
+	public String getScientificName() {
+		return scientificName;
+	}
+
+	public String getHank() {
+		return hank;
+	}
+
 	public Double getScore() {
 		return score;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(! (obj instanceof Taxon)) {
+			return false;
+		}
+		if(obj == this){
+			return true;
+		}
+		
+		Taxon taxon = (Taxon) obj;
+		
+		return this.taxonomyId.equals(taxon.getTaxonomyId()); 
 	}
 	
 }
