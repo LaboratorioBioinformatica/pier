@@ -10,6 +10,7 @@ public class TaxonomyFileManager {
 	
 	private static final String BREAK_LINE_OR_TAB = "\\n|\\t";
 	private static final String SPACE = " ";
+	private static final Integer ZERO = 0;
 	
 	public TaxonomyFileManager(){}
 	
@@ -36,40 +37,16 @@ public class TaxonomyFileManager {
 			String completeReadId = scanner.next();
 			String[] completReadIdSplitted = completeReadId.split(SPACE);
 			String readId = completReadIdSplitted[0];
-			String taxonomyId = scanner.next();
-			hashMap.put(readId.trim(),  Integer.valueOf(taxonomyId.trim()));
+			String taxonomyIdStr = scanner.next();
+			Integer taxonomyId = Integer.valueOf(taxonomyIdStr.trim());
+			if(taxonomyId > ZERO){
+				hashMap.put(readId.trim(),  taxonomyId);
+			}
 			
 		}
 		scanner.close();
 		
 		return hashMap;
 	}
-	
-//	public static void main(String[] args) throws FileNotFoundException {
-//		File mytaxaFile = new File("/data/mgb/taxonomy/ZC3b-DAY-01-mytaxa.output.mgb");
-//		File taxonomerFile = new File("/data/mgb/taxonomy/ZC3b-DAY-01-taxonomer.output.mgb");
-//		
-//		HashMap<String, Integer> mytaxaHash = createTaxonomyHashMapByFromDefautTaxonomyProvider(mytaxaFile);
-//		HashMap<String, Integer> taxonomerHash = createTaxonomyHashMapByFromDefautTaxonomyProvider(taxonomerFile);
-//		Integer taxonomerHit = 0;
-//		Integer mytaxaHit = 0;
-//		Integer bothHit = 0;
-//		
-//		Set<String> taxonomerKeySet = taxonomerHash.keySet();
-//		
-//		for (String key : taxonomerKeySet) {
-//			Integer mytaxaTaxon = mytaxaHash.get(key);
-//			Integer taxonomerTaxon = taxonomerHash.get(key);
-//			
-//			if(null != mytaxaTaxon && ! mytaxaTaxon.equals(0) && ! taxonomerTaxon.equals(0)){
-//				bothHit++;
-//			} else if(null != mytaxaTaxon && ! mytaxaTaxon.equals(0)){
-//				mytaxaHit++;
-//			} else if(! taxonomerTaxon.equals(0)){
-//				taxonomerHit++;
-//			}
-//		
-//		
-//	}
 
 }

@@ -46,7 +46,7 @@ public class MappingFileManager {
 			
 			String readName = currentSAMRecord.getReadName();
 			Taxon taxon = getTaxon(taxonomyHashMap, readName);
-			ReadOnContig readOnContig = new ReadOnContig(readName, currentSAMRecord.getReadString(), currentSAMRecord.getAlignmentStart(), currentSAMRecord.getAlignmentEnd(), currentSAMRecord.getFlags(), getPair(currentSAMRecord.getFirstOfPairFlag()), taxon);
+			ReadOnContig readOnContig = new ReadOnContig(readName, currentSAMRecord.getReadString(), currentSAMRecord.getAlignmentStart(), currentSAMRecord.getAlignmentEnd(), currentSAMRecord.getCigarString(), currentSAMRecord.getFlags(), getPair(currentSAMRecord.getFirstOfPairFlag()), taxon);
 			readsOnContig.add(readOnContig);
 		}
 		

@@ -40,6 +40,7 @@ public class MappingFileManagerTest {
 		
 		String sequenceName01 = "sequence01";
 		String sequence01 = "ACTGGTCCTAATCTGGTGAGTAGATGTAAACATCATCAACCAC";
+		String cigar01 = "10M";
 		Integer sequence01Start = 1;
 		Integer sequence01End = 10;
 		Integer sequence01Flag = 96;
@@ -47,6 +48,7 @@ public class MappingFileManagerTest {
 		
 		String sequenceName02 = "sequence02";
 		String sequence02 = "ACTGGTCCTAATCTGGTGAGTAGATGTAAACATCATCAACCACAACATCATCAACCAC";
+		String cigar02 = "19M";
 		Integer sequence02Start = 8;
 		Integer sequence02End = 25;
 		Integer sequence02Flag = 101;
@@ -78,8 +80,8 @@ public class MappingFileManagerTest {
 		SamInputResource inputResourceMock = Mockito.mock(SamInputResource.class);
 		SamReaderFactory readerFactoryMock = Mockito.mock(SamReaderFactory.class);
 
-		SAMRecord samRecord01Mock = createSAMRecordMock(sequenceName01, sequence01, sequence01Start, sequence01End, sequence01Flag, sequence01Pair);
-		SAMRecord samRecord02Mock = createSAMRecordMock(sequenceName02, sequence02, sequence02Start, sequence02End, sequence02Flag, sequence02Pair);
+		SAMRecord samRecord01Mock = createSAMRecordMock(sequenceName01, sequence01, sequence01Start, sequence01End, cigar01, sequence01Flag, sequence01Pair);
+		SAMRecord samRecord02Mock = createSAMRecordMock(sequenceName02, sequence02, sequence02Start, sequence02End, cigar02, sequence02Flag, sequence02Pair);
 		
 		SAMRecordIterator samRecordIteratorMock = createSAMRecordIteratorMock(samRecord01Mock, samRecord02Mock);
 		
@@ -99,8 +101,8 @@ public class MappingFileManagerTest {
 		
 		
 		List<ReadOnContig> expectedReadsOnContig = new ArrayList<ReadOnContig>();
-		expectedReadsOnContig.add(createReadOnContig(sequenceName01, sequence01, sequence01Start, sequence01End, sequence01Flag, sequence01Pair, taxon01));
-		expectedReadsOnContig.add(createReadOnContig(sequenceName02, sequence02, sequence02Start, sequence02End, sequence02Flag, sequence02Pair, taxon02));
+		expectedReadsOnContig.add(createReadOnContig(sequenceName01, sequence01, sequence01Start, sequence01End, cigar01, sequence01Flag, sequence01Pair, taxon01));
+		expectedReadsOnContig.add(createReadOnContig(sequenceName02, sequence02, sequence02Start, sequence02End, cigar02, sequence02Flag, sequence02Pair, taxon02));
 
 		List<ReadOnContig> readsOnContig = target.getReadsOnContig(contigReference, taxonomyHashMap);
 		
@@ -129,8 +131,8 @@ public class MappingFileManagerTest {
 		return mock;
 	}
 
-	private ReadOnContig createReadOnContig(String readReference, String sequence01, Integer sequence01Start, Integer sequence01End, Integer sequence01Flag, Boolean sequence01Pair, Taxon taxon) {
-		return new ReadOnContig(readReference, sequence01, sequence01Start, sequence01End, sequence01Flag, getPair(sequence01Pair), taxon);
+	private ReadOnContig createReadOnContig(String readReference, String sequence01, Integer sequence01Start, Integer sequence01End,String cigar, Integer sequence01Flag, Boolean sequence01Pair, Taxon taxon) {
+		return new ReadOnContig(readReference, sequence01, sequence01Start, sequence01End, cigar, sequence01Flag, getPair(sequence01Pair), taxon);
 	}
 
 	private void verifySAMRecordMock(SAMRecord samRecordMock) {
@@ -141,12 +143,13 @@ public class MappingFileManagerTest {
 		Mockito.verify(samRecordMock).getFirstOfPairFlag();
 	}
 
-	private SAMRecord createSAMRecordMock(String readName, String sequence, Integer sequenceStart, Integer sequenceEnd, Integer sequenceFlag, Boolean sequencePair) {
+	private SAMRecord createSAMRecordMock(String readName, String sequence, Integer sequenceStart, Integer sequenceEnd, String cigar, Integer sequenceFlag, Boolean sequencePair) {
 		SAMRecord mock = Mockito.mock(SAMRecord.class);
 		Mockito.when(mock.getReadName()).thenReturn(readName);
 		Mockito.when(mock.getReadString()).thenReturn(sequence);
 		Mockito.when(mock.getAlignmentStart()).thenReturn(sequenceStart);
 		Mockito.when(mock.getAlignmentEnd()).thenReturn(sequenceEnd);
+		Mockito.when(mock.getCigarString()).thenReturn(cigar);
 		Mockito.when(mock.getFlags()).thenReturn(sequenceFlag);
 		Mockito.when(mock.getFirstOfPairFlag()).thenReturn(sequencePair);
 

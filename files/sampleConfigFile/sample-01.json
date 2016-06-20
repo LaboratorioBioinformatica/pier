@@ -5,6 +5,6 @@
   "taxonomy": {"provider": "DEFAULT", "taxonomy": "files/taxonomy/sample-01-taxonomy.tsv"},
   
   "functional": {
-    "provider": "no"
+    "provider": "NO"
   }
 }

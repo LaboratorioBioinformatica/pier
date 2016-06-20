@@ -1,12 +1,13 @@
 package lbi.usp.br.caravela.config;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import lbi.usp.br.caravela.dto.Feature;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import lbi.usp.br.caravela.dto.Feature;
 
 public class FunctionFileManager {
 
@@ -15,12 +16,15 @@ public class FunctionFileManager {
 	private HashMap<String, List<Feature>> featureHashMap;
 
 	public FunctionFileManager(FunctionalCofigFile functionalCofigFile) {
-		
 		loadFiles(functionalCofigFile);
 	}
 
 	public List<Feature> getFeatureList(String sequenceReference) {
-		return featureHashMap.get(sequenceReference);
+		 List<Feature> list = featureHashMap.get(sequenceReference);
+		 if(list == null){
+			 list = Collections.emptyList();
+		 } 
+		return list;
 	}
 
 	private void loadFiles(FunctionalCofigFile functionalCofigFile) {

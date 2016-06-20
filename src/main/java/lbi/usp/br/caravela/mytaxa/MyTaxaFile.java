@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
+import lbi.usp.br.caravela.dto.Taxon;
+
 public class MyTaxaFile {
 
 	private static final String BREAK_LINE_OR_TAB = "\\n|\\t";
@@ -93,31 +95,26 @@ public class MyTaxaFile {
 		return list;
 	}
 	
-	public void mytaxaFileToMGBFile(String[] args) throws IOException {
+	public void mytaxaFileToPierDefaultFile(String myTaxaFilePath, String outputFilePath) throws IOException {
 		
-		String mytaxaFullFilePath = "/home/gianluca/git/mgwbrowser/files/mytaxa/ZC4DAY01IQMSIPER00R1-mytaxa-output.txt";
-		String newMGBFilePathname = "files/mytaxa/ZC4-DAY-01-mytaxa.output.mgb";
+		Hashtable<String, List<MyTaxaLine>> loadTaxonomyMultiHashTableFromFile = new MyTaxaFile().loadTaxonomyMultiHashTableFromFile(myTaxaFilePath);
 		
-		Hashtable<String,MyTaxaLine> mytaxaList = new MyTaxaFile().loadTaxonomyFile(mytaxaFullFilePath);
+		Set<String> keySet = loadTaxonomyMultiHashTableFromFile.keySet();
 		
-		mytaxaList.size();
-		Set<String> keySet = mytaxaList.keySet();
-		
-		File newFile = new File(newMGBFilePathname);
+		File newFile = new File(outputFilePath);
 		newFile.createNewFile();
 		
 		FileWriter fw = new FileWriter(newFile, true);
 		BufferedWriter bw = new BufferedWriter(fw);
 		
 		for (String sequenceReference : keySet) {
-			MyTaxaLine myTaxaLine = mytaxaList.get(sequenceReference);
+			
+			List<MyTaxaLine> myTaxaLineList = loadTaxonomyMultiHashTableFromFile.get(sequenceReference);
+			
+			Taxon taxon = findTaxonWithGreaterScoreByReadReference(myTaxaLineList);
 			
 			String newLine = null;
-			if(myTaxaLine.getTaxonomyId().endsWith("NA")){
-				newLine = sequenceReference + "\t" + 0;
-			} else {
-				newLine = sequenceReference + "\t" + myTaxaLine.getTaxonomyId();
-			}
+			newLine = sequenceReference + "\t" + taxon.getTaxonomyId();
 			
 			bw.write(newLine);
 			bw.newLine();
@@ -125,6 +122,33 @@ public class MyTaxaFile {
 		
 		bw.close();
 		fw.close();
+	}
+	
+	private Taxon findTaxonWithGreaterScoreByReadReference(List<MyTaxaLine> mytaxaList) {
+		Taxon selectedTaxon = null;
+		if(mytaxaList != null){
+			for (MyTaxaLine line : mytaxaList) {
+				String deepestTaxonomy = line.getCleanDeepestTaxonomy();
+				Taxon taxon = new Taxon.Builder().setTaxonomyId(new Integer(line.getTaxonomyId()))
+						.setScore(new Double(line.getScore()))
+						.setScientificName(deepestTaxonomy)
+						.setHank(line.getTaxonomyRank())
+						.build();
+				
+				if(selectedTaxon == null ){
+					selectedTaxon = taxon;
+				} else {
+					
+					if(taxon.getScore() > selectedTaxon.getScore()){
+						selectedTaxon = taxon;
+					}
+					
+				}
+			}
+			
+		}
+		
+		return selectedTaxon;
 	}
 
 }

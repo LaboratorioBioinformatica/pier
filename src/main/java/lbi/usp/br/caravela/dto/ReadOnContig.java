@@ -11,15 +11,17 @@ public class ReadOnContig {
 	private final Integer startAlignment;
 	@SerializedName("end")
 	private final Integer endAlignment;
+	private final String cigar;
 	private final Integer flag;
 	private final Integer pair;
 	private final Taxon taxon;
 	
-	public ReadOnContig(String reference, String sequence, Integer startAlignment, Integer endAlignment, Integer flag, Integer pair, Taxon taxon) {
+	public ReadOnContig(String reference, String sequence, Integer startAlignment, Integer endAlignment, String cigar, Integer flag, Integer pair, Taxon taxon) {
 		this.reference = reference;
 		this.sequence = sequence;
 		this.startAlignment = startAlignment;
 		this.endAlignment = endAlignment;
+		this.cigar = cigar;
 		this.flag = flag;
 		this.pair = pair;
 		this.taxon = taxon;	
@@ -49,6 +51,10 @@ public class ReadOnContig {
 		return endAlignment;
 	}
 
+	public String getCigar() {
+		return cigar;
+	}
+
 	public Integer getFlag() {
 		return flag;
 	}
@@ -60,6 +66,7 @@ public class ReadOnContig {
 	public Taxon getTaxon() {
 		return taxon;
 	}
+	
 
 	@Override
 	public boolean equals(Object obj) {
@@ -76,6 +83,7 @@ public class ReadOnContig {
 				this.sequence.equals(readOnContig.getSequence()) && 
 				this.startAlignment.equals(readOnContig.getStartAlignment()) &&
 				this.endAlignment.equals(readOnContig.getEndAlignment()) &&
+				this.cigar.equals(readOnContig.getCigar()) &&
 				this.flag.equals(readOnContig.getFlag()) &&
 				this.taxon.equals(readOnContig.getTaxon()) &&
 				this.pair.equals(readOnContig.getPair());

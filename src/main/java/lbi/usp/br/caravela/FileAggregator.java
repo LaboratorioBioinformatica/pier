@@ -8,10 +8,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import lbi.usp.br.caravela.config.FunctionFileManager;
 import lbi.usp.br.caravela.config.MappingFileManager;
 import lbi.usp.br.caravela.config.SampleConfigFile;
 import lbi.usp.br.caravela.config.TaxonomyFileConfig;
@@ -47,18 +47,16 @@ public class FileAggregator {
 		
 		File contigFile = getAndVerifyIfFileExists(sampleConfigFile.getContigFilePath(), CONTIG_FILE_TYPE);
 		FastaSequenceFile contigFileFasta = new FastaSequenceFile(contigFile, Boolean.FALSE);
-
 		HashMap<String, Integer> taxonomyHashMap = getTaxonomyHashMap(sampleConfigFile);
-
 		MappingFileManager mappingFileManager = new MappingFileManager(sampleConfigFile);
+		FunctionFileManager functionFileManager = new FunctionFileManager(sampleConfigFile.getFunctionalCofigFile());
 		
 		ReferenceSequence nextSequence = contigFileFasta.nextSequence();
 
-		System.out.println("[");
 		
 		while (nextSequence != null) {
 			String contigReference = nextSequence.getName();
-			List<Feature> featureList = new ArrayList<Feature>();
+			List<Feature> featureList = functionFileManager.getFeatureList(contigReference);
 			
 			List<ReadOnContig> readsOnContig = mappingFileManager.getReadsOnContig(contigReference, taxonomyHashMap);
 			String contigSequence = StringUtil.bytesToString(nextSequence.getBases());
@@ -68,16 +66,9 @@ public class FileAggregator {
 			nextSequence = contigFileFasta.nextSequence();
 			
 			System.out.println(gson.toJson(contig));
-			if(nextSequence != null){
-				System.out.print(",");
-			}
-			
 		}
 		
 		contigFileFasta.close();
-		System.out.println("]");
-		
-		
 		
 	}
 
@@ -86,7 +77,7 @@ public class FileAggregator {
 		TaxonomyFileConfig taxonomyFileConfig = sampleConfigFile.getTaxonomy();
 		taxonomyFileConfig.validate();
 		TaxonomyFileManager taxonomyFileManager = new TaxonomyFileManager();
-		HashMap<String,Integer> taxonomyHashMap = taxonomyFileManager.getTaxonomyHashMap(taxonomyFileConfig);
+		HashMap<String, Integer> taxonomyHashMap = taxonomyFileManager.getTaxonomyHashMap(taxonomyFileConfig);
 		if(taxonomyHashMap.isEmpty() ){
 			logger.warn("List of taxon is empty!");
 		}
