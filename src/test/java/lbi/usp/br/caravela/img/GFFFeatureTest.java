@@ -1,7 +1,7 @@
 package lbi.usp.br.caravela.img;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
+import org.junit.Test;
 
 public class GFFFeatureTest {
 	
@@ -28,8 +28,6 @@ public class GFFFeatureTest {
 			.append(ATTRIBUTE_NAME_LOCUS_TAG).append(EQUALS).append(ATTRIBUTE_VALUE_LOCUS_TAG).append(SEMICOLON).toString(); 
 			
 	
-	
-	
 	private static final String GFF_FILE_LINE = new StringBuilder(SEQ_ID).append(TAB)
 			.append(SOURCE).append(TAB)
 			.append(TYPE).append(TAB)
@@ -41,6 +39,8 @@ public class GFFFeatureTest {
 			.append(ATTRIBUTES).append(TAB)
 			.toString();
 	
+	
+	@Test
 	public void testGetters() throws Exception {
 		GFFFeature gffFeature = new GFFFeature(GFF_FILE_LINE);
 		Assert.assertEquals(SEQ_ID, gffFeature.getSeqId());
@@ -56,6 +56,7 @@ public class GFFFeatureTest {
 	}
 	
 	
+	@Test
 	public void testGetSeqIdByAttribute() throws Exception {
 		GFFFeature gffFeature = new GFFFeature(GFF_FILE_LINE);
 		Assert.assertEquals(ATTRIBUTE_VALUE_LOCUS_TAG, gffFeature.getAttributeByName(ATTRIBUTE_NAME_LOCUS_TAG));

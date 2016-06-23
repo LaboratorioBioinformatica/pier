@@ -34,6 +34,9 @@ public class FunctionFileManager {
 			logger.info("There are no functional annotations");
 			this.featureHashMap = new HashMap<String, List<Feature>>();
 		}
+		if (FunctionProvider.IMG_M.equals(provider)) {
+			
+		}
 	}
 
 }

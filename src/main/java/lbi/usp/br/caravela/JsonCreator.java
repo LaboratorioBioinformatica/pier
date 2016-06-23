@@ -124,18 +124,18 @@ public class JsonCreator {
 				String geneId = gffFeature.getGeneId();
 				GeneProduct geneProduct = createGeneProduct(geneProductFileManager.getGeneProductByGeneId(geneId));
 				PhiloDist philoDist = createPhiloDist(philoDistFileManager.getPhiloDistByGeneId(geneId));
-				Feature feature = createFeature(gffFeature, geneProduct, philoDist);
-				features.add(feature);
+//				Feature feature = createFeature(gffFeature, geneProduct, philoDist);
+//				features.add(feature);
 			}
 		}
 		
 		return features;
 	}
 
-	private Feature createFeature(GFFFeature gffFeature, GeneProduct geneProduct, PhiloDist philoDist) {
-		Feature feature = new Feature(gffFeature.getSource(), gffFeature.getType(), gffFeature.getStart(), gffFeature.getEnd(), gffFeature.getStrand(), geneProduct, philoDist);
-		return feature;
-	}
+//	private Feature createFeature(GFFFeature gffFeature, GeneProduct geneProduct, PhiloDist philoDist) {
+//		Feature feature = new Feature(gffFeature.getSource(), gffFeature.getType(), gffFeature.getStart(), gffFeature.getEnd(), gffFeature.getStrand(), geneProduct, philoDist);
+//		return feature;
+//	}
 
 	private PhiloDist createPhiloDist(IMGPhiloDist imgPhiloDist) {
 		PhiloDist philoDist = null;
