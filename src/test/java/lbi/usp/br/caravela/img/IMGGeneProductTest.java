@@ -1,7 +1,7 @@
 package lbi.usp.br.caravela.img;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
+import org.junit.Test;
 
 public class IMGGeneProductTest {
 	
@@ -15,6 +15,7 @@ public class IMGGeneProductTest {
 			.append(PRODUCT_NAME).append(TAB)
 			.append(SOURCE).toString();
 	
+	@Test
 	public void testGetters() throws Exception {
 		IMGGeneProduct target = new IMGGeneProduct(LINE);
 		Assert.assertEquals(GENE_ID, target.getGeneId());

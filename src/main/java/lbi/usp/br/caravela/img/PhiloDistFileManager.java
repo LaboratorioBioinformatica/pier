@@ -5,17 +5,22 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import lbi.usp.br.caravela.exeption.DomainException;
+
 public class PhiloDistFileManager {
 	
 	private static final String BREAK_LINE = "\\n";
 	
 	private HashMap<String, IMGPhiloDist> philoDistMap;
 
+	public PhiloDistFileManager() {
+	}
+	
 	public PhiloDistFileManager(String filePath) {
 		philoDistMap = load(filePath);
 	}
 
-	private HashMap<String, IMGPhiloDist> load(String filePath) {
+	public HashMap<String, IMGPhiloDist> load(String filePath) {
 		HashMap<String, IMGPhiloDist> philoDistMap = new HashMap<String, IMGPhiloDist>();
 		try {
 			Scanner scanner = new Scanner(new FileReader(filePath));
@@ -26,7 +31,7 @@ public class PhiloDistFileManager {
 			}
 			scanner.close();
 		} catch (FileNotFoundException e) {
-			System.out.println(e);
+			throw new DomainException("Invalid Philodist File Path", e);
 		}
 		return philoDistMap;
 	}

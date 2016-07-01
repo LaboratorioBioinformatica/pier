@@ -1,15 +1,10 @@
 package lbi.usp.br.caravela.dto;
 
 public class PhiloDist {
-	//homolog Gene OID
+
 	private Long geneOID;
-	
-	//homolog Taxon OID
 	private Long taxonOID;
-	
-	//percent of Identity
 	private Double identity;
-	
 	private String lineage;
 	
 	public PhiloDist(Long geneOID, Long taxonOID, Double identity, String lineage) {
@@ -18,5 +13,22 @@ public class PhiloDist {
 		this.identity = identity;
 		this.lineage = lineage;
 	}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof PhiloDist)){
+			return false;
+		}
+		if(obj == this){
+			return true;
+		}
+		PhiloDist philoDist = (PhiloDist) obj;
+		return this.geneOID.equals(philoDist.geneOID) &&
+				this.taxonOID.equals(philoDist.taxonOID) &&
+				this.identity.equals(philoDist.identity) && 
+				this.lineage.equals(philoDist.lineage);
+	}
+	
 
 }

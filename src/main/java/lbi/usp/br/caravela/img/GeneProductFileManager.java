@@ -5,17 +5,22 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import lbi.usp.br.caravela.exeption.DomainException;
+
 public class GeneProductFileManager {
 
 	private static final String BREAK_LINE = "\\n";
 
 	private HashMap<String, IMGGeneProduct> geneProductMap;
 
+	public GeneProductFileManager() {
+	}
+	
 	public GeneProductFileManager(String filePath) {
 		geneProductMap = load(filePath);
 	}
 
-	private HashMap<String, IMGGeneProduct> load(String filePath) {
+	public HashMap<String, IMGGeneProduct> load(String filePath) {
 		HashMap<String, IMGGeneProduct> geneProductMap = new HashMap<String, IMGGeneProduct>();
 		try {
 			Scanner scanner = new Scanner(new FileReader(filePath));
@@ -26,8 +31,9 @@ public class GeneProductFileManager {
 			}
 			scanner.close();
 		} catch (FileNotFoundException e) {
-			System.out.println(e);
+			throw new  DomainException("Invalid Gene Product File Path", e);
 		}
+		
 		return geneProductMap;
 	}
 	

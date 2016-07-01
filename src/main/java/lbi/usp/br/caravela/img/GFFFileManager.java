@@ -1,36 +1,50 @@
 package lbi.usp.br.caravela.img;
 
-import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
+import java.util.stream.Stream;
+
+import lbi.usp.br.caravela.exeption.DomainValidateException;
 
 public class GFFFileManager {
 
-	private static final String BREAK_LINE = "\\n";
+	private static final int ZERO = 0;
+	
 	private HashMap<String, List<GFFFeature>> multiHashMapGFFFeature;
 	
+	public GFFFileManager() {}
+	
 	public GFFFileManager(String filePath) {
-		multiHashMapGFFFeature = load(filePath);
+		load(filePath);
 	}
 	
 	public List<GFFFeature> getFeture(String sequenceReference){
-		return multiHashMapGFFFeature.get(sequenceReference);
+		if(multiHashMapGFFFeature != null ){
+			return multiHashMapGFFFeature.get(sequenceReference);
+		} else {
+			return null;
+		}
 	}
 
 	public Integer getNumberOfFeaturesBySequenceReference(String sequenceReference){
 		List<GFFFeature> fetureList = getFeture(sequenceReference);
-		return fetureList.size();
+		if(fetureList != null){
+			return fetureList.size();
+		} else {
+			return ZERO;
+		}
 	}
 	
-	private HashMap<String, List<GFFFeature>> load(String gffFilePath) {
+	public HashMap<String, List<GFFFeature>> load(String gffFilePath) {
+		System.out.println("GFF Paht: " + gffFilePath);
 		HashMap<String, List<GFFFeature>> multiHashMap = new  HashMap<String, List<GFFFeature>>();
-		try {
-			Scanner scanner = new Scanner(new FileReader(gffFilePath));
-			scanner.useDelimiter(BREAK_LINE);
-			while (scanner.hasNext()) {
-				GFFFeature gffFeature = new GFFFeature(scanner.next());
+		try (Stream<String> stream = Files.lines(Paths.get(gffFilePath))) {
+			stream.forEach(line-> {
+				GFFFeature gffFeature = new GFFFeature(line);
 				List<GFFFeature> featureList = multiHashMap.get(gffFeature.getSeqId());
 				if(featureList != null){
 					featureList.add(gffFeature);
@@ -40,13 +54,13 @@ public class GFFFileManager {
 					multiHashMap.put(gffFeature.getSeqId(), newFeatureList);
 				}
 				
-			}
-			scanner.close();
-		} catch (Exception e) {
-			System.out.println(e);
+			});
+			
+		} catch (IOException e) {
+			throw new DomainValidateException("Invalid gff file path", e);
 		}
+		this.multiHashMapGFFFeature = multiHashMap;
 		return multiHashMap;
 	}
-	
 
 }

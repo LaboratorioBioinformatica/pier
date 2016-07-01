@@ -4,10 +4,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import lbi.usp.br.caravela.dto.Feature;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import lbi.usp.br.caravela.dto.Feature;
+import lbi.usp.br.caravela.img.IMGFileManager;
 
 public class FunctionFileManager {
 
@@ -35,6 +36,8 @@ public class FunctionFileManager {
 			this.featureHashMap = new HashMap<String, List<Feature>>();
 		}
 		if (FunctionProvider.IMG_M.equals(provider)) {
+			IMGFileManager imgFileManager = new IMGFileManager();
+			featureHashMap = imgFileManager.getFeatureHashMap(functionalCofigFile);
 			
 		}
 	}

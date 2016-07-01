@@ -1,6 +1,7 @@
 package lbi.usp.br.caravela.img;
 
-import junit.framework.Assert;
+import org.junit.Assert;
+import org.junit.Test;
 
 
 public class IMGPhiloDistTest {
@@ -9,7 +10,6 @@ public class IMGPhiloDistTest {
 	private static final String HOMOLOG_GENE_OID = "2523866490";
 	private static final String HOMOLOG_TAXON_OID = "2523533587";
 	private static final String PERCENT_IDENTITY = "32.2";
-	//domain;phylum;class;order;family;genus;species;taxon_name
 	private static final String LINEAGE = "Bacteria;Bacteroidetes;Bacteroidia;Bacteroidales;Bacteroidaceae;Bacteroides;finegoldii;Bacteroides finegoldii DSM 17565";
 	
 	private static final String TAB = "\t";
@@ -20,6 +20,7 @@ public class IMGPhiloDistTest {
 			.append(PERCENT_IDENTITY).append(TAB)
 			.append(LINEAGE).toString();
 	
+	@Test
 	public void testGetters() throws Exception {
 		IMGPhiloDist target = new IMGPhiloDist(LINE);
 		
