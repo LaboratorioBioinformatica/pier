@@ -40,7 +40,6 @@ public class GFFFileManager {
 	}
 	
 	public HashMap<String, List<GFFFeature>> load(String gffFilePath) {
-		System.out.println("GFF Paht: " + gffFilePath);
 		HashMap<String, List<GFFFeature>> multiHashMap = new  HashMap<String, List<GFFFeature>>();
 		try (Stream<String> stream = Files.lines(Paths.get(gffFilePath))) {
 			stream.forEach(line-> {
