@@ -23,6 +23,7 @@ public class IMGFileManager {
 	private static final String GENE_PRODUCT_FILE_KEY = "geneProduct";
 	private static final String PHILO_DIST_FILE_KEY = "phylodist";
 	private static final String GENE_SEQUENCE_FILE_KEY = "geneSequence";
+	private static final String GENE_TAXONOMY_FILE_KEY = "geneTaxonomy";
 	
 	private static final String COG_FILE_KEY = "cog";
 	private static final String KO_FILE_KEY = "ko";
@@ -40,7 +41,7 @@ public class IMGFileManager {
 		HashMap<String, IMGGeneProduct> hashMapGeneProduct = getHashMapGeneProduct(fileList, getGeneProductFileManager());
 		HashMap<String, IMGPhiloDist>  hashMapPhiloDist = getHashMapPhiloDist(fileList, getPhiloDistFileManager());
 		HashMap<String,byte[]> hashMapGeneSequence = getHashMapGeneSequence(fileList);
-		
+		HashMap<String,Taxon> hashMapTaxon = getHashMapTaxon(fileList, getTaxonFileManager());
 		HashMap<String, List<FeatureAnnotation>> hashMapFeatureAnnotationList = getHashMapFeatureAnnotationList(fileList, getIMGAnnotationFileManager());
 
 		
@@ -57,7 +58,7 @@ public class IMGFileManager {
 				GeneProduct geneProduct = getGeneProduct(hashMapGeneProduct.get(geneId));
 				PhiloDist philoDist = getPhiloDist(hashMapPhiloDist.get(geneId));
 				String geneSequence = StringUtil.bytesToString(hashMapGeneSequence.get(geneId));
-				Taxon taxon = null;
+				Taxon taxon = hashMapTaxon.get(geneId);
 				List<FeatureAnnotation> annotations = hashMapFeatureAnnotationList.get(geneId);
 				
 				Feature feature = new Feature(gffFeature.getType(), gffFeature.getStart(), gffFeature.getEnd(), gffFeature.getStrand(), geneSequence, taxon, annotations, geneProduct, philoDist);
@@ -169,6 +170,15 @@ public class IMGFileManager {
 		} 
 		return hashMap;
 	}
+	
+	private HashMap<String, Taxon> getHashMapTaxon(HashMap<String, String> fileList, TaxonFileManager taxonFileManager) {
+		HashMap<String, Taxon> hashMap = new HashMap<String, Taxon>();
+		String geneTaxonomyFilePath = fileList.get(GENE_TAXONOMY_FILE_KEY);
+		if(null != geneTaxonomyFilePath && ! geneTaxonomyFilePath.isEmpty()){
+			hashMap.putAll(taxonFileManager.loadAndGetTaxonHashMap(geneTaxonomyFilePath));
+		} 
+		return hashMap;
+	}
 
 
 	private HashMap<String, IMGGeneProduct> getHashMapGeneProduct(HashMap<String, String> fileList, GeneProductFileManager geneProductFileManager) {
@@ -184,6 +194,11 @@ public class IMGFileManager {
 	protected PhiloDistFileManager getPhiloDistFileManager() {
 		return new PhiloDistFileManager();
 	}
+	
+	protected TaxonFileManager getTaxonFileManager(){
+		return new TaxonFileManager();
+	}
+	
 	protected IMGAnnotationFileManager getIMGAnnotationFileManager() {
 		return new IMGAnnotationFileManager();
 	}
