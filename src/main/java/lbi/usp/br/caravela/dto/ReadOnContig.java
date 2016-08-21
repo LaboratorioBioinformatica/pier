@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 public class ReadOnContig {
 	private final String reference;
 	private final String sequence;
+	private final Integer sequenceLenth;
 	@SerializedName("start")
 	private final Integer startAlignment;
 	@SerializedName("end")
@@ -16,15 +17,16 @@ public class ReadOnContig {
 	private final Integer pair;
 	private final Taxon taxon;
 	
-	public ReadOnContig(String reference, String sequence, Integer startAlignment, Integer endAlignment, String cigar, Integer flag, Integer pair, Taxon taxon) {
+	public ReadOnContig(String reference, String sequence, Integer sequenceLenth, Integer startAlignment, Integer endAlignment, String cigar, Integer flag, Integer pair, Taxon taxon) {
 		this.reference = reference;
 		this.sequence = sequence;
+		this.sequenceLenth = sequenceLenth;
 		this.startAlignment = startAlignment;
 		this.endAlignment = endAlignment;
 		this.cigar = cigar;
 		this.flag = flag;
 		this.pair = pair;
-		this.taxon = taxon;	
+		this.taxon = taxon;
 	}
 	
 	public boolean hasTaxon(){
@@ -67,6 +69,9 @@ public class ReadOnContig {
 		return taxon;
 	}
 	
+	public Integer getSequenceLenth(){
+		return sequenceLenth;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -80,7 +85,8 @@ public class ReadOnContig {
 		ReadOnContig readOnContig = (ReadOnContig) obj;
 		
 		return this.reference.equals(readOnContig.getReference()) && 
-				this.sequence.equals(readOnContig.getSequence()) && 
+				this.sequence.equals(readOnContig.getSequence()) &&
+				this.sequenceLenth.equals(readOnContig.getSequenceLenth()) &&
 				this.startAlignment.equals(readOnContig.getStartAlignment()) &&
 				this.endAlignment.equals(readOnContig.getEndAlignment()) &&
 				this.cigar.equals(readOnContig.getCigar()) &&

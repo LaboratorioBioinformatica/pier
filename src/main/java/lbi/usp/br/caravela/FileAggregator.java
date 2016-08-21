@@ -58,7 +58,7 @@ public class FileAggregator {
 			String contigReference = nextSequence.getName();
 			List<Feature> featureList = functionFileManager.getFeatureList(contigReference);
 			
-			List<ReadOnContig> readsOnContig = mappingFileManager.getReadsOnContig(contigReference, taxonomyHashMap);
+			List<ReadOnContig> readsOnContig = mappingFileManager.getReadsOnContig(contigReference, taxonomyHashMap, Boolean.FALSE);
 			String contigSequence = StringUtil.bytesToString(nextSequence.getBases());
 			
 			Contig contig = new Contig(contigReference, contigSequence, featureList , readsOnContig);

@@ -36,7 +36,7 @@ public class MappingFileManager {
 	}
 	
 	
-	public List<ReadOnContig> getReadsOnContig(String reference, HashMap<String, Integer> taxonomyHashMap){
+	public List<ReadOnContig> getReadsOnContig(String reference, HashMap<String, Integer> taxonomyHashMap, Boolean isReadSequenceRecorded){
 		
 		SAMRecordIterator queryResult = SAMReader.query(reference, START_REFERENCE, END_REFERENCE, Boolean.TRUE);
 		List<ReadOnContig> readsOnContig = new ArrayList<ReadOnContig>();
@@ -46,12 +46,21 @@ public class MappingFileManager {
 			
 			String readName = currentSAMRecord.getReadName();
 			Taxon taxon = getTaxon(taxonomyHashMap, readName);
-			ReadOnContig readOnContig = new ReadOnContig(readName, currentSAMRecord.getReadString(), currentSAMRecord.getAlignmentStart(), currentSAMRecord.getAlignmentEnd(), currentSAMRecord.getCigarString(), currentSAMRecord.getFlags(), getPair(currentSAMRecord.getFirstOfPairFlag()), taxon);
+			ReadOnContig readOnContig = new ReadOnContig(readName, getReadSequence(currentSAMRecord, isReadSequenceRecorded), currentSAMRecord.getReadLength(), currentSAMRecord.getAlignmentStart(), currentSAMRecord.getAlignmentEnd(), currentSAMRecord.getCigarString(), currentSAMRecord.getFlags(), getPair(currentSAMRecord.getFirstOfPairFlag()), taxon);
 			readsOnContig.add(readOnContig);
 		}
 		
 		queryResult.close();
 		return readsOnContig;
+	}
+
+
+	private String getReadSequence(SAMRecord currentSAMRecord, Boolean isReadSequenceRecorded) {
+		String readSequence = null;
+		if(isReadSequenceRecorded){
+			readSequence = currentSAMRecord.getReadString();
+		}
+		return readSequence;
 	}
 	
 	

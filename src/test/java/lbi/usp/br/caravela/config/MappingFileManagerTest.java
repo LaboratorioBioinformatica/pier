@@ -104,7 +104,7 @@ public class MappingFileManagerTest {
 		expectedReadsOnContig.add(createReadOnContig(sequenceName01, sequence01, sequence01Start, sequence01End, cigar01, sequence01Flag, sequence01Pair, taxon01));
 		expectedReadsOnContig.add(createReadOnContig(sequenceName02, sequence02, sequence02Start, sequence02End, cigar02, sequence02Flag, sequence02Pair, taxon02));
 
-		List<ReadOnContig> readsOnContig = target.getReadsOnContig(contigReference, taxonomyHashMap);
+		List<ReadOnContig> readsOnContig = target.getReadsOnContig(contigReference, taxonomyHashMap, Boolean.TRUE);
 		
 		Assert.assertEquals(expectedReadsOnContig, readsOnContig);
 		
@@ -132,7 +132,7 @@ public class MappingFileManagerTest {
 	}
 
 	private ReadOnContig createReadOnContig(String readReference, String sequence01, Integer sequence01Start, Integer sequence01End,String cigar, Integer sequence01Flag, Boolean sequence01Pair, Taxon taxon) {
-		return new ReadOnContig(readReference, sequence01, sequence01Start, sequence01End, cigar, sequence01Flag, getPair(sequence01Pair), taxon);
+		return new ReadOnContig(readReference, sequence01, sequence01.length(), sequence01Start, sequence01End, cigar, sequence01Flag, getPair(sequence01Pair), taxon);
 	}
 
 	private void verifySAMRecordMock(SAMRecord samRecordMock) {
@@ -147,6 +147,7 @@ public class MappingFileManagerTest {
 		SAMRecord mock = Mockito.mock(SAMRecord.class);
 		Mockito.when(mock.getReadName()).thenReturn(readName);
 		Mockito.when(mock.getReadString()).thenReturn(sequence);
+		Mockito.when(mock.getReadLength()).thenReturn(sequence.length());
 		Mockito.when(mock.getAlignmentStart()).thenReturn(sequenceStart);
 		Mockito.when(mock.getAlignmentEnd()).thenReturn(sequenceEnd);
 		Mockito.when(mock.getCigarString()).thenReturn(cigar);

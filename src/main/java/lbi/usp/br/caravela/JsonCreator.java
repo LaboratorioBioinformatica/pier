@@ -93,8 +93,8 @@ public class JsonCreator {
 				
 				Taxon taxon = findTaxonWithGreaterScoreByReadReference(readReference);
 				
-				ReadOnContig readOnContig = new ReadOnContig(readReference, next.getReadString(), next.getAlignmentStart(), next.getAlignmentEnd(), next.getCigarString(), next.getFlags(), getPair(next.getFirstOfPairFlag()), taxon);
-				readsOnContig.add(readOnContig);
+//				ReadOnContig readOnContig = new ReadOnContig(readReference, next.getReadString(), next.getAlignmentStart(), next.getAlignmentEnd(), next.getCigarString(), next.getFlags(), getPair(next.getFirstOfPairFlag()), taxon);
+//				readsOnContig.add(readOnContig);
 				
 			}
 			Contig contig = new Contig(referenceContig, contigSequence, featureList, readsOnContig);
