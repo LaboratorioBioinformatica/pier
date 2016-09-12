@@ -1,48 +1,37 @@
 package lbi.usp.br.caravela.img;
 
+import htsjdk.samtools.reference.FastaSequenceFile;
+import htsjdk.samtools.reference.ReferenceSequence;
+import htsjdk.samtools.util.StringUtil;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import htsjdk.samtools.reference.FastaSequenceFile;
-import htsjdk.samtools.reference.ReferenceSequence;
-import htsjdk.samtools.util.StringUtil;
 import lbi.usp.br.caravela.config.FunctionalCofigFile;
+import lbi.usp.br.caravela.dto.Feature;
 import lbi.usp.br.caravela.dto.FeatureAnnotation;
 import lbi.usp.br.caravela.dto.FeatureAnnotationType;
-import lbi.usp.br.caravela.dto.Feature;
 import lbi.usp.br.caravela.dto.GeneProduct;
 import lbi.usp.br.caravela.dto.PhiloDist;
 import lbi.usp.br.caravela.dto.Taxon;
 
 public class IMGFileManager {
 	
-	private static final String GFF_FILE_KEY = "gff";
-	private static final String GENE_PRODUCT_FILE_KEY = "geneProduct";
-	private static final String PHILO_DIST_FILE_KEY = "phylodist";
-	private static final String GENE_SEQUENCE_FILE_KEY = "geneSequence";
-	private static final String GENE_TAXONOMY_FILE_KEY = "geneTaxonomy";
-	
-	private static final String COG_FILE_KEY = "cog";
-	private static final String KO_FILE_KEY = "ko";
-	private static final String PFAM_FILE_KEY = "pfam";
-	private static final String EC_FILE_KEY = "ec";
-	
 	public IMGFileManager() {
 		
 	}
 	
 	public HashMap<String, List<Feature>>  getFeatureHashMap(FunctionalCofigFile functionalCofigFile){
-		HashMap<String, String> fileList = functionalCofigFile.getFileList();
 		
-		HashMap<String, List<GFFFeature>> hashMapGFFFeature = getHashMapGFFFeature(fileList, getGFFFileManager());
-		HashMap<String, IMGGeneProduct> hashMapGeneProduct = getHashMapGeneProduct(fileList, getGeneProductFileManager());
-		HashMap<String, IMGPhiloDist>  hashMapPhiloDist = getHashMapPhiloDist(fileList, getPhiloDistFileManager());
-		HashMap<String,byte[]> hashMapGeneSequence = getHashMapGeneSequence(fileList);
-		HashMap<String,Taxon> hashMapTaxon = getHashMapTaxon(fileList, getTaxonFileManager());
-		HashMap<String, List<FeatureAnnotation>> hashMapFeatureAnnotationList = getHashMapFeatureAnnotationList(fileList, getIMGAnnotationFileManager());
+		HashMap<String, List<GFFFeature>> hashMapGFFFeature = getHashMapGFFFeature(functionalCofigFile, getGFFFileManager());
+		HashMap<String, IMGGeneProduct> hashMapGeneProduct = getHashMapGeneProduct(functionalCofigFile, getGeneProductFileManager());
+		HashMap<String, IMGPhiloDist>  hashMapPhiloDist = getHashMapPhiloDist(functionalCofigFile, getPhiloDistFileManager());
+		HashMap<String,byte[]> hashMapGeneSequence = getHashMapGeneSequence(functionalCofigFile);
+		HashMap<String,Taxon> hashMapTaxon = getHashMapTaxon(functionalCofigFile, getTaxonFileManager());
+		HashMap<String, List<FeatureAnnotation>> hashMapFeatureAnnotationList = getHashMapFeatureAnnotationList(functionalCofigFile, getIMGAnnotationFileManager());
 
 		
 		HashMap<String, List<Feature>> featureHashMap = new HashMap<String, List<Feature>>();
@@ -74,24 +63,25 @@ public class IMGFileManager {
 		
 	}
 	
-	private HashMap<String, List<FeatureAnnotation>> getHashMapFeatureAnnotationList(HashMap<String, String> fileList, IMGAnnotationFileManager imgAnnotationFileManager) {
+	private HashMap<String, List<FeatureAnnotation>> getHashMapFeatureAnnotationList(FunctionalCofigFile functionalCofigFile, IMGAnnotationFileManager imgAnnotationFileManager) {
 		
 		HashMap<String, List<FeatureAnnotation>> allFeatureAnnotation = new HashMap<>();
 		
-		String KOFilePath = fileList.get(KO_FILE_KEY);
+		
+		String KOFilePath = functionalCofigFile.getFilePathByFileType(IMGFileType.KO_FILE_KEY);
 		if(KOFilePath != null && ! KOFilePath.isEmpty()){
 			allFeatureAnnotation = retreaveAndAggregateFeatureAnnotation(allFeatureAnnotation, imgAnnotationFileManager, FeatureAnnotationType.KO ,KOFilePath);
 		}
 		
-		String COGFilePath = fileList.get(COG_FILE_KEY);
+		String COGFilePath = functionalCofigFile.getFilePathByFileType(IMGFileType.COG_FILE_KEY);
 		if(COGFilePath != null && ! COGFilePath.isEmpty()){
 			allFeatureAnnotation = retreaveAndAggregateFeatureAnnotation(allFeatureAnnotation, imgAnnotationFileManager, FeatureAnnotationType.COG ,COGFilePath);
 		}
-		String ECFilePath = fileList.get(EC_FILE_KEY);
+		String ECFilePath = functionalCofigFile.getFilePathByFileType(IMGFileType.EC_FILE_KEY);
 		if(ECFilePath != null && ! ECFilePath.isEmpty()){
 			allFeatureAnnotation = retreaveAndAggregateFeatureAnnotation(allFeatureAnnotation, imgAnnotationFileManager, FeatureAnnotationType.EC ,ECFilePath);
 		}
-		String PFAMFilePath = fileList.get(PFAM_FILE_KEY);
+		String PFAMFilePath = functionalCofigFile.getFilePathByFileType(IMGFileType.PFAM_FILE_KEY);
 		if(PFAMFilePath != null && ! PFAMFilePath.isEmpty()){
 			allFeatureAnnotation = retreaveAndAggregateFeatureAnnotation(allFeatureAnnotation, imgAnnotationFileManager, FeatureAnnotationType.PFAM ,PFAMFilePath);
 		}
@@ -145,8 +135,8 @@ public class IMGFileManager {
 	}
 
 
-	private HashMap<String,byte[]>  getHashMapGeneSequence(HashMap<String, String> fileList){
-		String geneSequenceFilePath = fileList.get(GENE_SEQUENCE_FILE_KEY);
+	private HashMap<String,byte[]>  getHashMapGeneSequence(FunctionalCofigFile functionalCofigFile){
+		String geneSequenceFilePath = functionalCofigFile.getFilePathByFileType(IMGFileType.GENE_SEQUENCE_FILE_KEY);
 		
 		HashMap<String, byte[]> hashMap = new HashMap<String, byte []>();
 		if(null != geneSequenceFilePath && ! geneSequenceFilePath.isEmpty()){
@@ -162,18 +152,18 @@ public class IMGFileManager {
 		return hashMap;
 	}
 	
-	private HashMap<String, IMGPhiloDist> getHashMapPhiloDist(HashMap<String, String> fileList, PhiloDistFileManager philoDistFileManager) {
+	private HashMap<String, IMGPhiloDist> getHashMapPhiloDist(FunctionalCofigFile functionalCofigFile, PhiloDistFileManager philoDistFileManager) {
 		HashMap<String, IMGPhiloDist> hashMap = new HashMap<String, IMGPhiloDist>();
-		String philoDistFilePath = fileList.get(PHILO_DIST_FILE_KEY);
+		String philoDistFilePath = functionalCofigFile.getFilePathByFileType(IMGFileType.PHILO_DIST_FILE_KEY);
 		if(null != philoDistFilePath && ! philoDistFilePath.isEmpty()){
 			hashMap.putAll(philoDistFileManager.load(philoDistFilePath));
 		} 
 		return hashMap;
 	}
 	
-	private HashMap<String, Taxon> getHashMapTaxon(HashMap<String, String> fileList, TaxonFileManager taxonFileManager) {
+	private HashMap<String, Taxon> getHashMapTaxon(FunctionalCofigFile functionalCofigFile, TaxonFileManager taxonFileManager) {
 		HashMap<String, Taxon> hashMap = new HashMap<String, Taxon>();
-		String geneTaxonomyFilePath = fileList.get(GENE_TAXONOMY_FILE_KEY);
+		String geneTaxonomyFilePath = functionalCofigFile.getFilePathByFileType(IMGFileType.GENE_TAXONOMY_FILE_KEY);
 		if(null != geneTaxonomyFilePath && ! geneTaxonomyFilePath.isEmpty()){
 			hashMap.putAll(taxonFileManager.loadAndGetTaxonHashMap(geneTaxonomyFilePath));
 		} 
@@ -181,9 +171,9 @@ public class IMGFileManager {
 	}
 
 
-	private HashMap<String, IMGGeneProduct> getHashMapGeneProduct(HashMap<String, String> fileList, GeneProductFileManager geneProductFileManager) {
+	private HashMap<String, IMGGeneProduct> getHashMapGeneProduct(FunctionalCofigFile functionalCofigFile, GeneProductFileManager geneProductFileManager) {
 		HashMap<String, IMGGeneProduct> hashMap = new HashMap<String, IMGGeneProduct>();
-		String geneProductFilePath = fileList.get(GENE_PRODUCT_FILE_KEY);
+		String geneProductFilePath = functionalCofigFile.getFilePathByFileType(IMGFileType.GENE_PRODUCT_FILE_KEY);
 		if(null != geneProductFilePath && ! geneProductFilePath.isEmpty()){
 			hashMap.putAll(geneProductFileManager.load(geneProductFilePath));
 		}
@@ -203,8 +193,9 @@ public class IMGFileManager {
 		return new IMGAnnotationFileManager();
 	}
 
-	private HashMap<String, List<GFFFeature>> getHashMapGFFFeature(HashMap<String, String> fileList, GFFFileManager gffFileManager) {
-		return gffFileManager.load(fileList.get(GFF_FILE_KEY));
+	private HashMap<String, List<GFFFeature>> getHashMapGFFFeature(FunctionalCofigFile functionalCofigFile, GFFFileManager gffFileManager) {
+		String filePathByFileType = functionalCofigFile.getFilePathByFileType(IMGFileType.GFF_FILE_KEY);
+		return gffFileManager.load(filePathByFileType);
 	}
 
 	protected GFFFileManager getGFFFileManager() {

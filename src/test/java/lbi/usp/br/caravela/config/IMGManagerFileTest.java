@@ -3,10 +3,8 @@ package lbi.usp.br.caravela.config;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
-import java.util.List;
 
 import lbi.usp.br.caravela.exeption.DomainValidateException;
-import lbi.usp.br.caravela.img.GFFFeature;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,12 +45,14 @@ public class IMGManagerFileTest {
 		fileWriter.close();
 		
 		HashMap<String, String> files = new HashMap<>();
-		files.put("gff", gffFile.getAbsolutePath());
+		String directory = gffFile.getParent() + "/";
+		files.put("directory", directory);
+		files.put("gff", gffFile.getName());
 		
 		FunctionalCofigFile functionalCofigFile = new FunctionalCofigFile(FunctionProvider.IMG_M, files);
 		
 		IMGManagerFile target = new IMGManagerFile(functionalCofigFile);
-		List<GFFFeature> gffFeatureList = target.getGFFFeatureList();
+		target.getGFFFeatureList();
 		
 	}
 	
@@ -61,12 +61,13 @@ public class IMGManagerFileTest {
 		
 		expectedEx.expect(DomainValidateException.class);
 		expectedEx.expectMessage("Invalid gff file path");
-		
+		String directory = "/tmp/";
 		HashMap<String, String> files = new HashMap<>();
-		files.put("gff", "/tmp/donotexist.gff");
+		files.put("directory", directory);
+		files.put("gff", "donotexist.gff");
 		FunctionalCofigFile functionalCofigFile = new FunctionalCofigFile(FunctionProvider.IMG_M, files);
 		
-		IMGManagerFile target = new IMGManagerFile(functionalCofigFile);
+		new IMGManagerFile(functionalCofigFile);
 		
 		
 		

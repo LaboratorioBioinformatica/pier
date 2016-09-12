@@ -4,22 +4,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
 import lbi.usp.br.caravela.exeption.DomainValidateException;
 import lbi.usp.br.caravela.img.GFFFeature;
+import lbi.usp.br.caravela.img.IMGFileType;
 
 public class IMGManagerFile {
 	
-	private static final String GFF_FILE_KEY = "gff";
 	
 	private List<GFFFeature> GFFFeatureList; 
 	
 	public IMGManagerFile(FunctionalCofigFile functionalCofigFile) {
-		HashMap<String, String> fileList = functionalCofigFile.getFileList();
-		this.GFFFeatureList = getGFFFile(fileList);
+		String gffIMGFileType = functionalCofigFile.getFilePathByFileType(IMGFileType.GFF_FILE_KEY);
+		this.GFFFeatureList = getGFFFile(gffIMGFileType);
 		
 		
 	}
@@ -28,12 +27,9 @@ public class IMGManagerFile {
 		return this.GFFFeatureList;
 	}
 	
-	private List<GFFFeature> getGFFFile(HashMap<String, String> fileList) {
-		
+	private List<GFFFeature> getGFFFile(String gffIMGFilePath) {
 		List<GFFFeature> GFFFeatures = new ArrayList<GFFFeature>();
-		String gffFilePath = fileList.get(GFF_FILE_KEY);
-		
-		try (Stream<String> stream = Files.lines(Paths.get(gffFilePath))) {
+		try (Stream<String> stream = Files.lines(Paths.get(gffIMGFilePath))) {
 			stream.parallel().forEach(line -> GFFFeatures.add(new GFFFeature(line)));
 			
 		} catch (IOException e) {

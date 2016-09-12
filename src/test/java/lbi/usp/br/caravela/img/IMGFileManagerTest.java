@@ -99,26 +99,40 @@ public class IMGFileManagerTest {
 		fileWriter.write(GENE_SEQUENCE);
 		fileWriter.close();
 		
+		String directory = geneSequecenFileFasta.getParent() + "/";
+		
+		
 		HashMap<String, String> files = new HashMap<>();
-		String gffFilePath = "/tmp/fileExist.gff";
-		String geneProductFilePath = "/tmp/imgGeneProductFileExist.tsv";
-		String philoDistFilePath = "/tmp/imgPhiloDistFileExist.tsv";
-		String COGFilePath = "/tmp/IMGCOGFileExist.tsv";
-		String KOFilePath = "/tmp/IMGKOFileExist.tsv";
-		String PFAMFilePath = "/tmp/IMGPFAMFileExist.tsv";
-		String ECFilePath = "/tmp/IMGECFileExist.tsv";
+		String gffFilePath =  directory + "fileExist.gff";
+		String geneProductFilePath = directory + "imgGeneProductFileExist.tsv";
+		String philoDistFilePath = directory +  "imgPhiloDistFileExist.tsv";
+		String COGFilePath = directory +  "IMGCOGFileExist.tsv";
+		String KOFilePath =  directory +  "IMGKOFileExist.tsv";
+		String PFAMFilePath = directory +  "IMGPFAMFileExist.tsv";
+		String ECFilePath = directory + "IMGECFileExist.tsv";
 		
 		
-		String geneSequenceFilaPath = geneSequecenFileFasta.getAbsolutePath();
 		
-		files.put("gff", gffFilePath);
-		files.put("geneSequence", geneSequenceFilaPath);
-		files.put("geneProduct", geneProductFilePath);
-		files.put("phylodist", philoDistFilePath);
-		files.put("cog", COGFilePath);
-		files.put("ec", ECFilePath);
-		files.put("ko", KOFilePath);
-		files.put("pfam", PFAMFilePath);
+		String geneSequenceFilaName = geneSequecenFileFasta.getName();
+		String gffFileName = "fileExist.gff";
+		String geneProductFileName = "imgGeneProductFileExist.tsv";
+		String philoDistFileName = "imgPhiloDistFileExist.tsv";
+		String COGFileName = "IMGCOGFileExist.tsv";
+		String KOFileName = "IMGKOFileExist.tsv";
+		String PFAMFileName = "IMGPFAMFileExist.tsv";
+		String ECFileName = "IMGECFileExist.tsv";
+		
+		
+		files.put("directory", directory);
+		
+		files.put("gff", gffFileName);
+		files.put("geneSequence", geneSequenceFilaName);
+		files.put("geneProduct", geneProductFileName);
+		files.put("phylodist", philoDistFileName);
+		files.put("cog", COGFileName);
+		files.put("ec", ECFileName);
+		files.put("ko", KOFileName);
+		files.put("pfam", PFAMFileName);
 		
 		
 		FunctionalCofigFile functionalCofigFile = new FunctionalCofigFile(FunctionProvider.IMG_M, files);
