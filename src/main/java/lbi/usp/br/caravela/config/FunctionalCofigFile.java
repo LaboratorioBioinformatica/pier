@@ -1,6 +1,7 @@
 package lbi.usp.br.caravela.config;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import lbi.usp.br.caravela.exeption.DomainValidateException;
 import lbi.usp.br.caravela.img.IMGFileType;
@@ -68,6 +69,22 @@ public class FunctionalCofigFile {
 				throw new DomainValidateException("Invalid function file list");
 			} 
 		}
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder toStringBuilder = new StringBuilder();
+		if( ! FunctionProvider.NO.equals(provider) ) {
+			toStringBuilder.append(provider.toString()).append(":");
+			Set<String> keySet = files.keySet();
+			for (String key : keySet) {
+				toStringBuilder.append("\n").append(key).append(":").append(files.get(key)) ;
+			}
+		} else if(FunctionProvider.NO.equals(provider)) {
+			toStringBuilder.append(provider.toString());
+		}
+		return toStringBuilder.toString();	
+		
 	}
 	
 	

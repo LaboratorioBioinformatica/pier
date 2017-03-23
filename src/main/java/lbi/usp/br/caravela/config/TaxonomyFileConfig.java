@@ -52,6 +52,13 @@ public class TaxonomyFileConfig {
 	}
 	
 	@Override
+	public String toString() {
+		StringBuilder toStringBuilder = new StringBuilder();
+		toStringBuilder.append(provider.toString()).append(":").append(taxonomy);
+		return toStringBuilder.toString();
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 		if(! (obj instanceof TaxonomyFileConfig)) {
 			return false;

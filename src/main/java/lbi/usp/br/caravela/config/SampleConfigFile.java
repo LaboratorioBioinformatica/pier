@@ -1,5 +1,7 @@
 package lbi.usp.br.caravela.config;
 
+import java.io.File;
+
 import lbi.usp.br.caravela.exeption.DomainValidateException;
 
 
@@ -19,6 +21,31 @@ public class SampleConfigFile {
 		setMappingFilePath(mappingFilePath);
 		setTaxonomyFileConfig(taxonomyFileConfig);
 		this.functional = functionalCofigFile;
+	}
+	
+	public SampleConfigFile(String sampleName, String sampleDirectoryPath){
+		
+		setSample(sampleName);
+		
+		File folder = new File(sampleDirectoryPath);
+		File[] listOfFiles = folder.listFiles();
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				if (listOfFiles[i].getName().toLowerCase().startsWith("contig")) {
+					setContig(listOfFiles[i].getAbsolutePath());
+				}
+				if (listOfFiles[i].getName().toLowerCase().startsWith("mapping")) {
+					setMappingFilePath(listOfFiles[i].getAbsolutePath());
+				}
+				if (listOfFiles[i].getName().toLowerCase().startsWith("taxonomy")) {
+					setTaxonomyFileConfig(new TaxonomyFileConfig(TaxonomyProvider.DEFAULT, listOfFiles[i].getAbsolutePath()));
+				}
+			}
+		}
+		this.functional = new FunctionalCofigFile(FunctionProvider.NO, null);
+		
+
 	}
 	
 	public void validate(){
