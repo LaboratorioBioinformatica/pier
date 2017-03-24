@@ -24,26 +24,28 @@ public class SampleConfigFile {
 	}
 	
 	public SampleConfigFile(String sampleName, String sampleDirectoryPath){
-		
-		setSample(sampleName);
-		
-		File folder = new File(sampleDirectoryPath);
-		File[] listOfFiles = folder.listFiles();
-
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
-				if (listOfFiles[i].getName().toLowerCase().startsWith("contig")) {
-					setContig(listOfFiles[i].getAbsolutePath());
-				}
-				if (listOfFiles[i].getName().toLowerCase().startsWith("mapping")) {
-					setMappingFilePath(listOfFiles[i].getAbsolutePath());
-				}
-				if (listOfFiles[i].getName().toLowerCase().startsWith("taxonomy")) {
-					setTaxonomyFileConfig(new TaxonomyFileConfig(TaxonomyProvider.DEFAULT, listOfFiles[i].getAbsolutePath()));
+		try {
+			setSample(sampleName);
+			File folder = new File(sampleDirectoryPath);
+			File[] listOfFiles = folder.listFiles();
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					if (listOfFiles[i].getName().toLowerCase().startsWith("contig")) {
+						setContig(listOfFiles[i].getAbsolutePath());
+					}
+					if (listOfFiles[i].getName().toLowerCase().startsWith("mapping")) {
+						setMappingFilePath(listOfFiles[i].getAbsolutePath());
+					}
+					if (listOfFiles[i].getName().toLowerCase().startsWith("taxonomy")) {
+						setTaxonomyFileConfig(new TaxonomyFileConfig(TaxonomyProvider.DEFAULT, listOfFiles[i].getAbsolutePath()));
+					}
 				}
 			}
+			this.functional = new FunctionalCofigFile(FunctionProvider.NO, null);
+			
+		} catch (Exception e) {
+			throw new DomainValidateException("Requereds file not found!", e);
 		}
-		this.functional = new FunctionalCofigFile(FunctionProvider.NO, null);
 		
 
 	}
@@ -86,6 +88,17 @@ public class SampleConfigFile {
 		validateContig(contig);
 		this.contig = contig;
 		
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder toStringBuilder = new StringBuilder();
+		toStringBuilder.append("Sample: ").append(getSampleName())
+			.append("Contigs: ").append(getContigFilePath())
+			.append("Mapping: ").append(getMappingFilePath())
+			.append("Taxonomy: ").append(getTaxonomy().toString())
+			.append("Functional: ").append(getFunctionalCofigFile().toString());
+		return toStringBuilder.toString();
 	}
 	
 

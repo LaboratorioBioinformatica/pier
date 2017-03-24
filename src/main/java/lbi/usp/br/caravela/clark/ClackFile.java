@@ -64,10 +64,6 @@ public class ClackFile {
 			}
 			
 			System.out.println(fileNotFoundMessageBuilder.toString());
-		} catch (Exception e) {
-			
-			// TODO: handle exception
-		}
-		
+		} 		
 	}
 }

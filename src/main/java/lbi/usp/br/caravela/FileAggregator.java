@@ -29,15 +29,25 @@ public class FileAggregator {
 	
 	
 	private static final String CONTIG_FILE_TYPE = "contig";
-	private final FileReader fileReader;
 	
 	private static final Logger logger = LoggerFactory.getLogger(FileAggregator.class);
-
-	public FileAggregator(String sampleFilePath) throws FileNotFoundException {
-		fileReader = new FileReader(sampleFilePath);
+	
+	public FileAggregator() {
+		 
 	}
 	
-	public void createJsonFile() throws Exception {
+	public void createJsonFileByConfigFileDirectoryPath(String sampleName, String directoryPath) throws FileNotFoundException{
+		SampleConfigFile sampleConfigFile = new SampleConfigFile(sampleName, directoryPath);
+		sampleConfigFile.validate();
+		
+		logger.info(sampleName.toString());
+		
+		createJsonFile(sampleConfigFile);
+		
+	}
+	
+	public void createJsonFileByConfigFileInput(String sampleConfigFilePath) throws Exception {
+		FileReader fileReader = new FileReader(sampleConfigFilePath);
 		
 		BufferedReader br = new BufferedReader(fileReader);
 		Gson gson = new Gson();
@@ -45,14 +55,20 @@ public class FileAggregator {
 		SampleConfigFile sampleConfigFile = gson.fromJson(br, SampleConfigFile.class);
 		sampleConfigFile.validate();
 		
+		createJsonFile(sampleConfigFile);
+	}
+
+	private void createJsonFile(SampleConfigFile sampleConfigFile) throws FileNotFoundException {
+		
 		File contigFile = getAndVerifyIfFileExists(sampleConfigFile.getContigFilePath(), CONTIG_FILE_TYPE);
-		FastaSequenceFile contigFileFasta = new FastaSequenceFile(contigFile, Boolean.FALSE);
+		FastaSequenceFile contigFileFasta = new FastaSequenceFile(contigFile, Boolean.TRUE);
 		HashMap<String, Integer> taxonomyHashMap = getTaxonomyHashMap(sampleConfigFile);
 		MappingFileManager mappingFileManager = new MappingFileManager(sampleConfigFile);
 		FunctionFileManager functionFileManager = new FunctionFileManager(sampleConfigFile.getFunctionalCofigFile());
 		
 		ReferenceSequence nextSequence = contigFileFasta.nextSequence();
 
+		Gson gson = new Gson();
 		
 		while (nextSequence != null) {
 			String contigReference = nextSequence.getName();
@@ -69,9 +85,8 @@ public class FileAggregator {
 		}
 		
 		contigFileFasta.close();
-		
 	}
-
+	
 	
 	private HashMap<String, Integer> getTaxonomyHashMap(SampleConfigFile sampleConfigFile) throws FileNotFoundException {
 		TaxonomyFileConfig taxonomyFileConfig = sampleConfigFile.getTaxonomy();
