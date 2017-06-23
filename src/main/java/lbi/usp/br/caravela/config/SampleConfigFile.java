@@ -33,7 +33,7 @@ public class SampleConfigFile {
 					if (listOfFiles[i].getName().toLowerCase().startsWith("contig")) {
 						setContig(listOfFiles[i].getAbsolutePath());
 					}
-					if (listOfFiles[i].getName().toLowerCase().startsWith("mapping")) {
+					if (listOfFiles[i].getName().toLowerCase().startsWith("mapping") && listOfFiles[i].getName().toLowerCase().endsWith("bam")) {
 						setMappingFilePath(listOfFiles[i].getAbsolutePath());
 					}
 					if (listOfFiles[i].getName().toLowerCase().startsWith("taxonomy")) {
