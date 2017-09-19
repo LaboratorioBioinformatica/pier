@@ -42,12 +42,18 @@ public class MappingFileManager {
 		List<ReadOnContig> readsOnContig = new ArrayList<ReadOnContig>();
 		
 		while(queryResult.hasNext()){
+			
 			SAMRecord currentSAMRecord = queryResult.next();
 			
-			String readName = currentSAMRecord.getReadName();
-			Taxon taxon = getTaxon(taxonomyHashMap, readName);
-			ReadOnContig readOnContig = new ReadOnContig(readName, getReadSequence(currentSAMRecord, isReadSequenceRecorded), currentSAMRecord.getReadLength(), currentSAMRecord.getAlignmentStart(), currentSAMRecord.getAlignmentEnd(), currentSAMRecord.getCigarString(), currentSAMRecord.getFlags(), getPair(currentSAMRecord.getFirstOfPairFlag()), taxon);
-			readsOnContig.add(readOnContig);
+			
+			if( ! SAMRecord.NO_ALIGNMENT_CIGAR.equals(currentSAMRecord.getCigarString())) {
+				String readName = currentSAMRecord.getReadName();
+				Taxon taxon = getTaxon(taxonomyHashMap, readName);
+				ReadOnContig readOnContig = new ReadOnContig(readName, getReadSequence(currentSAMRecord, isReadSequenceRecorded), currentSAMRecord.getReadLength(), currentSAMRecord.getAlignmentStart(), currentSAMRecord.getAlignmentEnd(), currentSAMRecord.getCigarString(), currentSAMRecord.getFlags(), getPair(currentSAMRecord.getFirstOfPairFlag()), taxon);
+				readsOnContig.add(readOnContig);
+			}
+			
+			
 		}
 		
 		queryResult.close();

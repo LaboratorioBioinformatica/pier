@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import lbi.usp.br.caravela.FileAggregator;
 import lbi.usp.br.caravela.config.FunctionalCofigFile;
 import lbi.usp.br.caravela.dto.Feature;
 import lbi.usp.br.caravela.dto.FeatureAnnotation;
@@ -19,6 +23,8 @@ import lbi.usp.br.caravela.dto.PhiloDist;
 import lbi.usp.br.caravela.dto.Taxon;
 
 public class IMGFileManager {
+	
+	private static final Logger logger = LoggerFactory.getLogger(IMGFileManager.class);
 	
 	public IMGFileManager() {
 		
@@ -115,12 +121,21 @@ public class IMGFileManager {
 	private PhiloDist getPhiloDist(IMGPhiloDist imgPhiloDist) {
 		PhiloDist philoDist = null;
 		if(imgPhiloDist != null){
-			philoDist = new PhiloDist(
-					new Long(imgPhiloDist.getHomologGeneOID()),
-					new Long(imgPhiloDist.getHomologTaxonOID()), 
-					new Double(imgPhiloDist.getPercentIdentity()), 
-					imgPhiloDist.getLineage()
-			);
+			
+			try {
+				
+				philoDist = new PhiloDist(
+						new Long(imgPhiloDist.getHomologGeneOID()),
+						new Long(imgPhiloDist.getHomologTaxonOID()), 
+						new Double(imgPhiloDist.getPercentIdentity()), 
+						imgPhiloDist.getLineage());
+				
+			} catch (Exception e) {
+				logger.warn("Could not parse IDs or Identity value from gene id: " + imgPhiloDist.getGeneId() + " " + e.getMessage(), e);
+				System.out.println("Could not parse IDs or Identity value from gene id: " + imgPhiloDist.getGeneId() + " " + e.getMessage());
+			}
+			
+			
 		}
 		return philoDist;
 	}
