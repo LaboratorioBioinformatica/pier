@@ -27,7 +27,7 @@ public class App {
 			} else if (app.equals(MY_TAXA_TO_PIER)) {
 				new MyTaxaFile().mytaxaFileToPierDefaultFile(args[1], args[2]);
 			} else if (app.equals(FEATURES_JOIN)) {
-				JsonCreator mappingReader = new JsonCreator(args[1]);
+				new JsonCreator(args[1]);
 			} else if (app.equals(AGGREGATOR)) {
 				FileAggregator fileAggregator = new FileAggregator();
 				fileAggregator.createJsonFileByConfigFileInput(args[1]);

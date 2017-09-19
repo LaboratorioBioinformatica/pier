@@ -5,7 +5,7 @@ import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 public class Contig {
-	
+
 	private final String reference;
 	private final String sequence;
 	@SerializedName("nOfR")
@@ -15,7 +15,7 @@ public class Contig {
 	private final Integer size;
 	private final List<Feature> features;
 	private final List<ReadOnContig> readsOnCotig;
-	
+
 	public Contig(String reference, String sequence, List<Feature> features, List<ReadOnContig> readsOnCotig) {
 		this.reference = reference;
 		this.sequence = sequence;
@@ -25,18 +25,11 @@ public class Contig {
 		this.numberOfFeatures = features.size();
 		this.size = sequence.length();
 	}
-	
+
 	@Override
 	public String toString() {
-		return new StringBuilder().append("reference: ")
-		.append(reference)
-		.append("\t")
-		.append("Number of reads on contig: ")
-		.append(numberOfreads)
-		.append("Number of features on contig: ")
-		.append(numberOfFeatures).toString();
+		return new StringBuilder().append("reference: ").append(reference).append("\t")
+				.append("Number of reads on contig: ").append(numberOfreads).append("Number of features on contig: ")
+				.append(numberOfFeatures).toString();
 	}
-	
-	
-
 }

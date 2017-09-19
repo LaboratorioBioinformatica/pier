@@ -2,12 +2,10 @@ package lbi.usp.br.caravela;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 
 import lbi.usp.br.caravela.mytaxa.MyTaxaFile;
